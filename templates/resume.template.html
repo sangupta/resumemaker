@@ -1,7 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en_US">
 	<head>
 		<title>$name</title>
+		<link rel="stylesheet" type="text/css" href="resume.css" />
 	</head>
 	<body>
 		<header>
@@ -9,25 +10,174 @@
 			<h3>$linkedin.headline</h3>
 			<p>$linkedin.summary</p>
 		</header>
+
+
+		<!-- ************************************************************
+			POSITIONS
+		************************************************************* -->
+		#if($linkedin.positions.size() > 0)
 		<section id="experience">
+			<h2>Experience</h2>
+			<article>
+				<div class="timeLine">
+					<div>
+						<div style="float: left; width: $positions[0].startPercent;" >&nbsp;</div>
+						#foreach($event in $positions)
+							<div class="dataColumns" style="left: $event.startPercent; width: $event.widthPercent;" >$event.name</div>
+						#end
+						<div class="clear" ></div>
+					</div>
+					
+					<div style="border-top: 3px solid;" ></div>
+					
+					<div>
+						#foreach($year in $positionsTimeLine.years)
+							<div class="columns" style="width: $positionsTimeLine.widthPercent;" >$year</div>
+						#end
+						<div class="clear" ></div>
+					</div>
+					
+					<div class="clear" ></div>
+				</div>
+			</article>
 		</section>
-		<section id="education">
+		#end
+
+
+		<!-- ************************************************************
+			CERTIFICATIONS
+		************************************************************* -->
+		#if($linkedin.certifications && $linkedin.certifications.size() > 0)
+		<section id="certifications">
+			<h2>Certifications</h2>
+			<article>
+				#foreach($cert in $linkedin.certifications)
+					<div class="certificate">
+						$cert.name, 
+						<i>
+							#if($cert.startDate.year && !$cert.endDate.year)
+								$cert.startDate.year
+							#elseif($cert.endDate.year && !$cert.startDate.year)
+							 	$cert.endDate.year
+							#else
+								$cert.startDate.year - $cert.endDate.year
+							#end
+						</i>
+					</div>
+				#end
+			</article>
 		</section>
+		#end
+
+		
+		<!-- ************************************************************
+			AWARDS
+		************************************************************* -->
+		#if($linkedin.awards && $linkedin.awards.size() > 0) 
 		<section id="awards">
+			<h2>Awards &amp; Honors</h2>
+			<article>
+				#foreach($award in $linkedin.awards)
+					<div class="award">$award.name</div>
+				#end
+			</article>
 		</section>
+		#end
+
+
+		<!-- ************************************************************
+			PATENTS
+		************************************************************* -->
+		#if($linkedin.patents.size() > 0)
 		<section id="patents">
+			<h2>Patents</h2>
 		</section>
-		<section id="publications">
+		#end
+
+		<!-- ************************************************************
+			PUBLICATIONS
+		************************************************************* -->
+		#if($linkedin.publications.size() > 0)
+		<section id="publications">	
+			<h2>Publications</h2>
 		</section>
+		#end
+
+		<!-- ************************************************************
+			SKILLS
+		************************************************************* -->
+		#if($linkedin.skills.size() > 0)
 		<section id="skills">
 		</section>
+		#end
+
+		<!-- ************************************************************
+			EDUCATION
+		************************************************************* -->
+		#if($linkedin.educations.size() > 0)
+		<section id="education">
+			<h2>Education</h2>
+			<article>
+				<div class="timeLine">
+					<div>
+						<div style="float: left; width: $educations[0].startPercent;" >&nbsp;</div>
+						#foreach($event in $educations)
+							<div class="dataColumns" style="left: $event.startPercent; width: $event.widthPercent;" >$event.name</div>
+						#end
+						<div class="clear" ></div>
+					</div>
+					
+					<div style="border-top: 3px solid;" ></div>
+					
+					<div>
+						#foreach($year in $educationTimeLine.years)
+							<div class="columns" style="width: $educationTimeLine.widthPercent;" >$year</div>
+						#end
+						<div class="clear" ></div>
+					</div>
+					
+					<div class="clear" ></div>
+				</div>
+			</article>
+		</section>
+		#end
+		
+		<!-- ************************************************************
+			INTERESTS
+		************************************************************* -->
+		#if($linkedin.interests && $linkedin.interests.size() > 0)
 		<section id="interests">
+			<h2>Interests</h2>
 		</section>
+		#end
+
+		<!-- ************************************************************
+			RECOMMENDATIONS
+		************************************************************* -->
+		#if($linkedin.recommendations.size() > 0)
 		<section id="recommendations">
+			<h2>Recommendations</h2>
+			<article>
+				#foreach($rec in $linkedin.recommendations)
+					<blockquote>
+						<p>$rec.recommendationText</p>
+						<small>$rec.recommender.firstName $rec.recommender.lastName <em>$rec.recommendationType.code.name</em></small>
+					</blockquote>
+				#end
+			</article>
 		</section>
+		#end
+
+		<!-- ************************************************************
+			OPEN SOURCE
+		************************************************************* -->
+		#if($github)
 		<section id="openSource">
+			<h2>Open Source</h2>
 		</section>
+		#end
 		<footer>
+			Generated using <a href="#">ResumeMaker</a> on $createdOn.toString()
 		</footer>
 	</body>
 </html>
