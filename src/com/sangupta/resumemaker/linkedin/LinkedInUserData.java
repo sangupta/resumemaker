@@ -36,6 +36,10 @@ public class LinkedInUserData {
 	
 	private String summary;
 	
+	private String specialities;
+	
+	private final List<String> interests = new ArrayList<String>();
+	
 	private final List<Recommendation> recommendations = new ArrayList<Recommendation>();
 	
 	private final List<Education> educations = new ArrayList<Education>();
@@ -76,6 +80,21 @@ public class LinkedInUserData {
 
 	public void addSkills(List<Skill> skillList) {
 		this.skills.addAll(skillList);
+	}
+	
+	public void setInterests(String interests) {
+		if(interests != null && interests.trim().length() > 0) {
+			String[] tokens = interests.split(",");
+			for(String token : tokens) {
+				if(token != null && token.trim().length() > 0) {
+					this.interests.add(token.trim());
+				}
+			}
+		}
+	}
+	
+	public void setHonors(String honors) {
+		// do nothing
 	}
 	
 	// Usual accessor's follow
@@ -130,5 +149,13 @@ public class LinkedInUserData {
 
 	public List<Skill> getSkills() {
 		return skills;
+	}
+
+	public String getSpecialities() {
+		return specialities;
+	}
+
+	public void setSpecialities(String specialities) {
+		this.specialities = specialities;
 	}
 }

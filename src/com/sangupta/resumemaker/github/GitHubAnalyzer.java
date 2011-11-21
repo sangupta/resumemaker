@@ -17,6 +17,12 @@
  */
 package com.sangupta.resumemaker.github;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +43,20 @@ import com.sangupta.resumemaker.model.UserData;
 
 public class GitHubAnalyzer implements Analyzer {
 
-	final CommitService commitService = new CommitService();
+	private final CommitService commitService = new CommitService();
+	
+	private Connection conn = null;
+	
+	private PreparedStatement saveInDB = null;
+	
+	private PreparedStatement getFromDB = null;
 	
 	@Override
 	public void analyze(Config config, UserData userData) throws Exception {
+		// create the database
+		createDatabase();
+		
+		// start fetching data
 		final GitHubData data = userData.gitHubData;
 		
 		// get all repositories
@@ -110,8 +126,22 @@ public class GitHubAnalyzer implements Analyzer {
 		// we will use this data to plot graphs in the final resume sheet
 		
 		System.out.println("Done with github.");
+		
+		// close the database
+		shutDownDatabase();
 	}
 	
+	public void shutDownDatabase() {
+		if(conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private GitHubRepositoryData getGitHubRepositoryData(Repository repository, boolean collaborated) {
 		GitHubRepositoryData git = new GitHubRepositoryData(false);
 		
@@ -141,10 +171,19 @@ public class GitHubAnalyzer implements Analyzer {
 			if(repositoryCommit.getCommitter() != null && repositoryCommit.getCommitter().getId() == currentUser.getId()) {
 				// the user has committed this change
 				final String sha = repositoryCommit.getSha();
-				ExtendedCommitService ecs = new ExtendedCommitService();
-				ExtendedRepositoryCommit commit = ecs.getCommit(repository, sha);
-
-				GitHubCommitData commitData = getCommitData(name, sha, commit);
+				
+				GitHubCommitData commitData = null;
+				// check if the data is available in the local DB
+				// if yes, use it - else fetch fresh from server
+				commitData = getFromDatabase(name, sha);
+				if(commitData == null) {
+					ExtendedCommitService ecs = new ExtendedCommitService();
+					ExtendedRepositoryCommit commit = ecs.getCommit(repository, sha);
+		
+					commitData = getCommitData(name, sha, commit);
+					
+					saveInDatabase(commitData);
+				}
 				
 				data.addDetails(commitData);
 			}
@@ -153,6 +192,72 @@ public class GitHubAnalyzer implements Analyzer {
 		System.out.println("done!");
 	}
 
+	/**
+	 * Save commit data in a local database so that it can be reused again
+	 * and resume updates happen much faster.
+	 * 
+	 * @param commitData
+	 */
+	private void saveInDatabase(GitHubCommitData commitData) throws SQLException {
+		if(saveInDB == null) {
+			saveInDB = conn.prepareStatement("INSERT INTO commits (sha, repositoryName, additions, deletions, filesImpacted, createdAt) VALUES (?, ?, ?, ?, ?, ?)");
+		}
+		
+		saveInDB.setString(1, commitData.sha);
+		saveInDB.setString(2, commitData.repositoryID);
+		saveInDB.setInt(3, commitData.additions);
+		saveInDB.setInt(4, commitData.deletions);
+		saveInDB.setInt(5, commitData.filesImpacted);
+		
+		java.sql.Date d = null;
+		if(commitData.createdAt != null) {
+			d = new java.sql.Date(commitData.createdAt.getTime());
+		}
+		saveInDB.setDate(6, d);
+		
+		saveInDB.execute();
+	}
+
+	/**
+	 * Check if we have details on a particular SHA under the given repository name.
+	 * 
+	 * @param name
+	 * @param sha
+	 * @return
+	 * @throws SQLException 
+	 */
+	private GitHubCommitData getFromDatabase(String name, String sha) throws SQLException {
+		if(getFromDB == null) {
+			getFromDB = conn.prepareStatement("SELECT * FROM commits WHERE repositoryName = ? AND sha = ?");
+		}
+		
+		getFromDB.setString(1, name);
+		getFromDB.setString(2, sha);
+		
+		ResultSet rs = getFromDB.executeQuery();
+		if(rs.next()) {
+			GitHubCommitData cd = new GitHubCommitData();
+			cd.repositoryID = name;
+			cd.sha = sha;
+			cd.additions = rs.getInt("additions");
+			cd.deletions = rs.getInt("deletions");
+			cd.filesImpacted = rs.getInt("filesImpacted");
+			cd.createdAt = rs.getDate("createdAt");
+			
+			return cd;
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Create a {@link GitHubCommitData} object from the given data source.
+	 * 
+	 * @param repositoryName
+	 * @param sha
+	 * @param commit
+	 * @return
+	 */
 	private GitHubCommitData getCommitData(String repositoryName, String sha, ExtendedRepositoryCommit commit) {
 		GitHubCommitData commitData = new GitHubCommitData();
 
@@ -164,6 +269,38 @@ public class GitHubAnalyzer implements Analyzer {
 		commitData.filesImpacted = commit.getFiles().size();
 		
 		return commitData;
+	}
+	
+	/**
+	 * Create the caching database used to store commit data locally.
+	 * 
+	 */
+	public void createDatabase() {
+		String driver = "org.sqlite.JDBC";
+		try {
+			Class.forName(driver).newInstance();
+
+			conn = DriverManager.getConnection("jdbc:sqlite:github.db");
+			
+			// create the database table
+			Statement stat = conn.createStatement();
+			stat.executeUpdate("CREATE TABLE IF NOT EXISTS commits (" +
+					"sha TEXT NOT NULL PRIMARY KEY," +
+					"repositoryName TEXT NOT NULL," +
+					"additions INTEGER," +
+					"deletions INTEGER," +
+					"filesImpacted INTEGER," +
+					"createdAt DATE)");
+			
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
