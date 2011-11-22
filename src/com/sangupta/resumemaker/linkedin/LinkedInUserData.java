@@ -30,6 +30,10 @@ import com.google.code.linkedinapi.schema.Skill;
 
 public class LinkedInUserData {
 	
+	private static final String COMMA = ",";
+
+	private static final String SEMICOLON = ";";
+
 	private String name;
 	
 	private String headline;
@@ -37,6 +41,8 @@ public class LinkedInUserData {
 	private String summary;
 	
 	private String specialities;
+	
+	private final List<String> honors = new ArrayList<String>();
 	
 	private final List<String> interests = new ArrayList<String>();
 	
@@ -84,7 +90,7 @@ public class LinkedInUserData {
 	
 	public void setInterests(String interests) {
 		if(interests != null && interests.trim().length() > 0) {
-			String[] tokens = interests.split(",");
+			String[] tokens = interests.split(COMMA);
 			for(String token : tokens) {
 				if(token != null && token.trim().length() > 0) {
 					this.interests.add(token.trim());
@@ -94,7 +100,18 @@ public class LinkedInUserData {
 	}
 	
 	public void setHonors(String honors) {
-		// do nothing
+		if(honors != null && honors.trim().length() > 0) {
+			String[] tokens = honors.split(SEMICOLON);
+			for(String token : tokens) {
+				if(token != null && token.trim().length() > 0) {
+					this.honors.add(token.trim());
+				}
+			}
+		}
+	}
+	
+	public List<String> getAwards() {
+		return honors;
 	}
 	
 	// Usual accessor's follow
@@ -157,5 +174,13 @@ public class LinkedInUserData {
 
 	public void setSpecialities(String specialities) {
 		this.specialities = specialities;
+	}
+
+	public List<String> getInterests() {
+		return interests;
+	}
+
+	public List<String> getHonors() {
+		return honors;
 	}
 }

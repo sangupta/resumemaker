@@ -80,7 +80,7 @@
 			<h2>Awards &amp; Honors</h2>
 			<article>
 				#foreach($award in $linkedin.awards)
-					<div class="award">$award.name</div>
+					<div class="award">$award</div>
 				#end
 			</article>
 		</section>
@@ -150,6 +150,9 @@
 		#if($linkedin.interests && $linkedin.interests.size() > 0)
 		<section id="interests">
 			<h2>Interests</h2>
+			#foreach($name in $linkedin.interests)
+				<div class="interest">$name</div>
+			#end
 		</section>
 		#end
 

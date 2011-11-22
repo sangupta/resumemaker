@@ -81,11 +81,7 @@ public class LinkedInAnalyzer implements Analyzer {
 		
 		linkedInUserData.setInterests(profile.getInterests());
 		linkedInUserData.setSpecialities(profile.getSpecialties());
-		
-		System.out.println("Interests: " + profile.getInterests());
-		System.out.println("Associations: " + profile.getAssociations());
-		System.out.println("Honors: " + profile.getHonors());
-		System.out.println("Specialities: " + profile.getSpecialties());
+		linkedInUserData.setHonors(profile.getHonors());
 		
 		Positions positions = profile.getPositions();
 		if(positions != null) {
