@@ -263,7 +263,7 @@ public class GitHubAnalyzer implements Analyzer {
 
 		commitData.repositoryID = repositoryName;
 		commitData.sha = sha;
-		commitData.createdAt = commit.getCommitter().getCreatedAt();
+		commitData.createdAt = commit.getCommit().getAuthor().getDate();
 		commitData.additions = commit.getStats().getAdditions();
 		commitData.deletions = commit.getStats().getDeletions();
 		commitData.filesImpacted = commit.getFiles().size();

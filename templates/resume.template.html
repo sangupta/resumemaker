@@ -53,14 +53,16 @@
 			<article>
 				#foreach($cert in $linkedin.certifications)
 					<div class="certificate">
-						$cert.name, 
+						$cert.name
 						<i>
-							#if($cert.startDate.year && !$cert.endDate.year)
-								$cert.startDate.year
-							#elseif($cert.endDate.year && !$cert.startDate.year)
-							 	$cert.endDate.year
-							#else
-								$cert.startDate.year - $cert.endDate.year
+							#if($cert.startDate.year || $cert.endDate.year)
+								#if($cert.startDate.year && !$cert.endDate.year)
+									, $cert.startDate.year
+								#elseif($cert.endDate.year && !$cert.startDate.year)
+								 	, $cert.endDate.year
+								#else
+									, $cert.startDate.year - $cert.endDate.year
+								#end
 							#end
 						</i>
 					</div>
@@ -161,7 +163,7 @@
 				#foreach($rec in $linkedin.recommendations)
 					<blockquote>
 						<p>$rec.recommendationText</p>
-						<small>$rec.recommender.firstName $rec.recommender.lastName <em>$rec.recommendationType.code.name</em></small>
+						<small>$rec.recommender.firstName $rec.recommender.lastName<em>, $rec.recommendationType.code.name()</em></small>
 					</blockquote>
 				#end
 			</article>
@@ -181,7 +183,11 @@
 				<h3>Projects</h3>
 				#foreach($repo in $github.repositories)
 					<div class="row">
-						<h4>$repo.name <small>$repo.language</small></h4>
+						<h4>$repo.name&nbsp;
+							#if($repo.language)
+								<small>$repo.language</small>
+							#end
+						</h4>
 						<p>$repo.description</p>
 						<div>Watchers: $repo.watchers, Forks: $repo.forks</div>
 						<div>Last commit on $repo.lastPushed.toString()</div>
