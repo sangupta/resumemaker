@@ -120,6 +120,7 @@ public class HtmlExport implements Exporter {
 		context.put("educationTimeLine", timeLine);
 		
 		// set the github data
+		userData.gitHubData.sortRepositories();
 		context.put("github", userData.gitHubData);
 		
 		return context;

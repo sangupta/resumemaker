@@ -18,6 +18,7 @@
 package com.sangupta.resumemaker.github;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,24 +26,26 @@ import java.util.Map;
 
 public class GitHubData {
 	
-	public String location;
+	private String location;
 	
-	public int publicRepositories;
+	private int publicRepositories;
 	
-	public int contributingRepositories;
+	private int contributingRepositories;
 	
-	public int followers;
+	private int followers;
 	
-	public Date joiningDate;
+	private Date joiningDate;
 	
-	public String blogURL;
+	private String blogURL;
 	
-	public String webURL;
+	private String webURL;
 	
 	private final Map<String, Integer> languages = new HashMap<String, Integer>();
 	
-	public final List<GitHubCommitData> commitDatas = new ArrayList<GitHubCommitData>();
+	private final List<GitHubCommitData> commitDatas = new ArrayList<GitHubCommitData>();
 	
+	private final List<GitHubRepositoryData> repositories = new ArrayList<GitHubRepositoryData>();
+
 	private int totalLanguages = 0;
 	
 	private void addLanguage(String language) {
@@ -56,22 +59,98 @@ public class GitHubData {
 		totalLanguages++;
 	}
 	
-	public final List<GitHubRepositoryData> repositories = new ArrayList<GitHubRepositoryData>();
-
 	public void addRepository(GitHubRepositoryData repository) {
 		this.repositories.add(repository);
 		
 		if(repository != null) {
-			addLanguage(repository.language);
+			addLanguage(repository.getLanguage());
 		}
 	}
+	
+	public void sortRepositories() {
+		Collections.sort(this.repositories);
+	}
+	
+	public void addDetails(GitHubCommitData commitData) {
+		this.commitDatas.add(commitData);
+	}
+
+	// Usual accessor's follow
 	
 	public int getTotalLanguages() {
 		return this.totalLanguages;
 	}
 
-	public void addDetails(GitHubCommitData commitData) {
-		this.commitDatas.add(commitData);
+	public String getLocation() {
+		return location;
+	}
+
+	public int getPublicRepositories() {
+		return publicRepositories;
+	}
+
+	public int getContributingRepositories() {
+		return contributingRepositories;
+	}
+
+	public int getFollowers() {
+		return followers;
+	}
+
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+
+	public String getBlogURL() {
+		return blogURL;
+	}
+
+	public String getWebURL() {
+		return webURL;
+	}
+
+	public Map<String, Integer> getLanguages() {
+		return languages;
+	}
+
+	public List<GitHubCommitData> getCommitDatas() {
+		return commitDatas;
+	}
+
+	public List<GitHubRepositoryData> getRepositories() {
+		return repositories;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public void setPublicRepositories(int publicRepositories) {
+		this.publicRepositories = publicRepositories;
+	}
+
+	public void setContributingRepositories(int contributingRepositories) {
+		this.contributingRepositories = contributingRepositories;
+	}
+
+	public void setFollowers(int followers) {
+		this.followers = followers;
+	}
+
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
+
+	public void setBlogURL(String blogURL) {
+		this.blogURL = blogURL;
+	}
+
+	public void setWebURL(String webURL) {
+		this.webURL = webURL;
+	}
+
+	public void setTotalLanguages(int totalLanguages) {
+		this.totalLanguages = totalLanguages;
 	}
 
 }

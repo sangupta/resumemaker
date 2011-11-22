@@ -174,6 +174,20 @@
 		#if($github)
 		<section id="openSource">
 			<h2>Open Source</h2>
+			<article>
+				<h3>Commit Line</h3>
+			</article>
+			<article>
+				<h3>Projects</h3>
+				#foreach($repo in $github.repositories)
+					<div class="row">
+						<h4>$repo.name <small>$repo.language</small></h4>
+						<p>$repo.description</p>
+						<div>Watchers: $repo.watchers, Forks: $repo.forks</div>
+						<div>Last commit on $repo.lastPushed.toString()</div>
+					</div>
+				#end
+			</article>
 		</section>
 		#end
 		<footer>

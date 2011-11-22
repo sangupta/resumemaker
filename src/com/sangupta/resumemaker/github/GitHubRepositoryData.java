@@ -19,23 +19,23 @@ package com.sangupta.resumemaker.github;
 
 import java.util.Date;
 
-public class GitHubRepositoryData {
+public class GitHubRepositoryData implements Comparable<GitHubRepositoryData> {
 	
 	private boolean collaborated = false;
 	
-	public String name;
+	private String name;
 	
-	public String language;
+	private String language;
 	
-	public String description;
+	private String description;
 	
-	public int watchers;
+	private int watchers;
 	
-	public int forks;
+	private int forks;
 	
-	public Date created;
+	private Date created;
 	
-	public Date lastPushed;
+	private Date lastPushed;
 	
 	public GitHubRepositoryData(boolean collaborated) {
 		this.collaborated = collaborated;
@@ -43,6 +43,73 @@ public class GitHubRepositoryData {
 	
 	public boolean isCollaborated() {
 		return this.collaborated;
+	}
+
+	@Override
+	public int compareTo(GitHubRepositoryData other) {
+		if(other == null) {
+			return -1;
+		}
+		
+		return this.name.compareTo(other.name);
+	}
+	
+	// Usual accessor's follow
+
+	public String getName() {
+		return name;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public int getWatchers() {
+		return watchers;
+	}
+
+	public int getForks() {
+		return forks;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public Date getLastPushed() {
+		return lastPushed;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setWatchers(int watchers) {
+		this.watchers = watchers;
+	}
+
+	public void setForks(int forks) {
+		this.forks = forks;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+
+	public void setLastPushed(Date lastPushed) {
+		this.lastPushed = lastPushed;
 	}
 
 }

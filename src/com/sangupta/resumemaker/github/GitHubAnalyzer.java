@@ -63,11 +63,11 @@ public class GitHubAnalyzer implements Analyzer {
 		UserService userService = new UserService();
 		final User currentUser = userService.getUser(config.gitHubConfig.userName);
 		
-		data.location = currentUser.getLocation();
-		data.blogURL = currentUser.getBlog();
-		data.followers = currentUser.getFollowers();
-		data.joiningDate = currentUser.getCreatedAt();
-		data.webURL = currentUser.getHtmlUrl();
+		data.setLocation(currentUser.getLocation());
+		data.setBlogURL(currentUser.getBlog());
+		data.setFollowers(currentUser.getFollowers());
+		data.setJoiningDate(currentUser.getCreatedAt());
+		data.setWebURL(currentUser.getHtmlUrl());
 		
 		System.out.println("GitHub: user details fetched.");
 		
@@ -76,7 +76,7 @@ public class GitHubAnalyzer implements Analyzer {
 		
 		System.out.println("GitHub: user repositories fetched.");
 		
-		data.publicRepositories = userRepositories.size();
+		data.setPublicRepositories(userRepositories.size());
 		for(Repository repository : userRepositories) {
 			GitHubRepositoryData git = getGitHubRepositoryData(repository, true);
 			
@@ -117,7 +117,7 @@ public class GitHubAnalyzer implements Analyzer {
 				}
 			}
 		}
-		data.contributingRepositories = size;
+		data.setContributingRepositories(size);
 		
 		System.out.println("GitHub: user contributing repositories fetched.");
 		
@@ -145,13 +145,13 @@ public class GitHubAnalyzer implements Analyzer {
 	private GitHubRepositoryData getGitHubRepositoryData(Repository repository, boolean collaborated) {
 		GitHubRepositoryData git = new GitHubRepositoryData(false);
 		
-		git.name = repository.getName();
-		git.language = repository.getLanguage();
-		git.description = repository.getDescription();
-		git.watchers = repository.getWatchers();
-		git.forks = repository.getForks();
-		git.created = repository.getCreatedAt();
-		git.lastPushed = repository.getPushedAt();
+		git.setName(repository.getName());
+		git.setLanguage(repository.getLanguage());
+		git.setDescription(repository.getDescription());
+		git.setWatchers(repository.getWatchers());
+		git.setForks(repository.getForks());
+		git.setCreated(repository.getCreatedAt());
+		git.setLastPushed(repository.getPushedAt());
 		
 		return git;
 	}
