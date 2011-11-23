@@ -25,6 +25,8 @@ public class Event implements Comparable<Event> {
 	
 	private String name;
 	
+	private String description;
+	
 	private String toolTip;
 	
 	private float start;
@@ -91,6 +93,14 @@ public class Event implements Comparable<Event> {
 
 	public float getEnd() {
 		return PercentUtils.twoDecimals(end);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

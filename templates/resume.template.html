@@ -19,25 +19,8 @@
 		<section id="experience">
 			<h2>Experience</h2>
 			<article>
-				<div class="timeLine">
-					<div>
-						<div style="float: left; width: $positions[0].startPercent;" >&nbsp;</div>
-						#foreach($event in $positions)
-							<div class="dataColumns" style="left: $event.startPercent; width: $event.widthPercent;" >$event.name</div>
-						#end
-						<div class="clear" ></div>
-					</div>
-					
-					<div style="border-top: 3px solid;" ></div>
-					
-					<div>
-						#foreach($year in $positionsTimeLine.years)
-							<div class="columns" style="width: $positionsTimeLine.widthPercent;" >$year</div>
-						#end
-						<div class="clear" ></div>
-					</div>
-					
-					<div class="clear" ></div>
+				<div>
+					$positionsTimeLine
 				</div>
 			</article>
 		</section>
@@ -120,26 +103,7 @@
 		<section id="education">
 			<h2>Education</h2>
 			<article>
-				<div class="timeLine">
-					<div>
-						<div style="float: left; width: $educations[0].startPercent;" >&nbsp;</div>
-						#foreach($event in $educations)
-							<div class="dataColumns" style="left: $event.startPercent; width: $event.widthPercent;" >$event.name</div>
-						#end
-						<div class="clear" ></div>
-					</div>
-					
-					<div style="border-top: 3px solid;" ></div>
-					
-					<div>
-						#foreach($year in $educationTimeLine.years)
-							<div class="columns" style="width: $educationTimeLine.widthPercent;" >$year</div>
-						#end
-						<div class="clear" ></div>
-					</div>
-					
-					<div class="clear" ></div>
-				</div>
+				$educationTimeLine
 			</article>
 		</section>
 		#end
@@ -181,6 +145,7 @@
 			<h2>Open Source</h2>
 			<article>
 				<h3>Commit Line</h3>
+				$githubGraph
 			</article>
 			<article>
 				<h3>Projects</h3>

@@ -30,7 +30,15 @@ public class DateUtils {
 		
 		return calendar.get(Calendar.YEAR);
 	}
-
+	
+	public static int getWeekOfYear(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		if(date != null) {
+			calendar.setTime(date);
+		}
+		
+		return calendar.get(Calendar.DAY_OF_YEAR) / 7;
+	}
 
 	public static int getMonth(Date date) {
 		Calendar calendar = Calendar.getInstance();

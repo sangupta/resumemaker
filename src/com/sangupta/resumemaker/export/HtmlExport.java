@@ -36,6 +36,12 @@ import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import com.google.code.linkedinapi.schema.Education;
 import com.google.code.linkedinapi.schema.Position;
 import com.sangupta.resumemaker.Exporter;
+import com.sangupta.resumemaker.export.svg.Line;
+import com.sangupta.resumemaker.export.svg.Path;
+import com.sangupta.resumemaker.export.svg.Rectangle;
+import com.sangupta.resumemaker.export.svg.SVGBuilder;
+import com.sangupta.resumemaker.export.svg.Text;
+import com.sangupta.resumemaker.github.GitHubCommitData;
 import com.sangupta.resumemaker.linkedin.LinkedInHelper;
 import com.sangupta.resumemaker.model.Event;
 import com.sangupta.resumemaker.model.TimeLine;
@@ -47,6 +53,8 @@ public class HtmlExport implements Exporter {
 	private static final String TEMPLATE_NAME = "resume.template.html";
 	
 	private static final String TEMPLATE_FOLDER = "./templates/" + TEMPLATE_NAME;
+	
+	private static final int GRAPHIC_WIDTH = 800;
 	
 	private static final VelocityEngine engine = new VelocityEngine();
 	
@@ -106,24 +114,184 @@ public class HtmlExport implements Exporter {
 			events.add(new Event(position.getCompany().getName(), LinkedInHelper.fromStartDate(position.getStartDate()), LinkedInHelper.fromEndDate(position.getEndDate())));
 		}
 		
-		TimeLine timeLine = createTimeLineCode(events);
 		context.put("positions", events);
-		context.put("positionsTimeLine", timeLine);
+		context.put("positionsTimeLine", createSVGTimeLineCode(events));
 		
 		// build education time line
 		events = new ArrayList<Event>();
 		for(Education education : userData.linkedInUserData.getEducations()) {
-			events.add(new Event(education.getSchoolName(), LinkedInHelper.fromStartDate(education.getStartDate()), LinkedInHelper.fromEndDate(education.getEndDate())));
+			if(education.getDegree() != null) {
+				Event event = new Event(education.getSchoolName(), LinkedInHelper.fromStartDate(education.getStartDate()), LinkedInHelper.fromEndDate(education.getEndDate()));
+				event.setDescription(education.getDegree());
+				events.add(event);
+			}
 		}
-		timeLine = createTimeLineCode(events);
 		context.put("educations", events);
-		context.put("educationTimeLine", timeLine);
+		context.put("educationTimeLine", createSVGTimeLineCode(events));
 		
 		// set the github data
 		userData.gitHubData.sortRepositories();
 		context.put("github", userData.gitHubData);
+		context.put("githubGraph", createGithubGraph(userData.gitHubData.getCommitDatas()));
 		
 		return context;
+	}
+
+	/**
+	 * Create an area graph of commit data
+	 * 
+	 * @param commitDatas
+	 * @return
+	 */
+	private String createGithubGraph(List<GitHubCommitData> commits) {
+		if(commits == null) {
+			return null;
+		}
+		
+		Collections.sort(commits);
+
+		final int startYear = DateUtils.getYear(commits.get(0).createdAt);
+		final int endYear = DateUtils.getYear(commits.get(commits.size() - 1).createdAt) + 2; // add TWO to make sure that we if we are nearing the end of the current year, then we have enough space at the end of the graph
+		float totalYearSegments = endYear - startYear;  
+
+		final float yearSegmentWidth = GRAPHIC_WIDTH / totalYearSegments;
+		final float weekSegmentWidth = yearSegmentWidth / 52;
+
+		final int BASE_LINE = 500;
+		final int THICKNESS = 3;
+		
+		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH, 550);
+		
+		// create the basic timeline
+		Rectangle rectangle = new Rectangle(0, BASE_LINE, GRAPHIC_WIDTH, THICKNESS);
+		svgBuilder.addRectangle(rectangle);
+		
+		final float textAdditive = yearSegmentWidth * 0.5f;
+		
+		for(int year = startYear; year < endYear; year++) {
+			int index = year - startYear;
+			float x = yearSegmentWidth * index;
+			
+			// add the year vertical bar distinguisher
+			rectangle = new Rectangle(x, BASE_LINE, THICKNESS, 10);
+			svgBuilder.addRectangle(rectangle);
+			
+			// add the year number
+			Text text = new Text(x + textAdditive, BASE_LINE + 20f, String.valueOf(year));
+			svgBuilder.addText(text);
+		}
+
+		// determine max value for y-axis
+		float maxLines = 0;
+		for(GitHubCommitData commit : commits) {
+			maxLines += commit.additions - commit.deletions;
+		}
+
+		// normalize the maximum value
+		final float lineFactor = 500f / maxLines;
+		
+		System.out.println("Line factor: " + lineFactor);
+		
+		float totalLines = 0;
+		int lastMyYear = 0;
+		int lastMyWeek = 0;
+		
+		float lastX = 0f;
+		float lastY = 0f;
+		
+		for(GitHubCommitData commit : commits) {
+			final int myYear = DateUtils.getYear(commit.createdAt); 
+			final int myWeek = DateUtils.getWeekOfYear(commit.createdAt);
+			
+			if(myYear == lastMyYear && myWeek == lastMyWeek) {
+				totalLines += commit.additions + commit.deletions;
+			} else {
+				float x = ((myYear - startYear) * yearSegmentWidth) + ((myWeek - 1) * weekSegmentWidth);
+				float y = totalLines * lineFactor;
+
+				Line line = new Line(lastX, BASE_LINE - lastY, x, BASE_LINE - y);
+				svgBuilder.addLine(line);
+				
+				lastMyYear = myYear;
+				lastMyWeek = myWeek;
+				
+				System.out.println("Week " + myWeek + " of year " + myYear + " had totalLines of " + totalLines + " as (" + x + ", " + y + ")");
+				
+				lastX = x;
+				lastY = y;
+			}
+		}
+		
+		return svgBuilder.toString();
+	}
+
+	private String createSVGTimeLineCode(List<Event> events) {
+		if(events == null) {
+			return null;
+		}
+		
+		// sort the collection based on the dates
+		Collections.sort(events);
+		
+		// start finding the segment widths
+		// and build up the array
+		final int startYear = DateUtils.getYear(events.get(0).getStartDate());
+		final int endYear = DateUtils.getYear(events.get(events.size() - 1).getEndDate()) + 2; // add TWO to make sure that we if we are nearing the end of the current year, then we have enough space at the end of the graph
+		
+		float totalYearSegments = endYear - startYear;  
+		final float yearSegmentWidth = GRAPHIC_WIDTH / totalYearSegments;
+		final float monthSegmentWidth = yearSegmentWidth / 12;
+		
+		final int BASE_LINE = 200;
+		final int THICKNESS = 3;
+		
+		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH, 250);
+		
+		// create the basic timeline
+		Rectangle rectangle = new Rectangle(0, BASE_LINE, GRAPHIC_WIDTH, THICKNESS);
+		svgBuilder.addRectangle(rectangle);
+		
+		final float textAdditive = yearSegmentWidth * 0.5f;
+		
+		for(int year = startYear; year < endYear; year++) {
+			int index = year - startYear;
+			float x = yearSegmentWidth * index;
+			
+			// add the year vertical bar distinguisher
+			rectangle = new Rectangle(x, 200, THICKNESS, 10);
+			svgBuilder.addRectangle(rectangle);
+			
+			// add the year number
+			Text text = new Text(x + textAdditive, 220f, String.valueOf(year));
+			svgBuilder.addText(text);
+		}
+		
+		// start building the shape for each year
+		for(Event event : events) {
+			int myStartYear = DateUtils.getYear(event.getStartDate());
+			int myStartMonth = DateUtils.getMonth(event.getStartDate());
+			
+			float startX = ((myStartYear - startYear) * yearSegmentWidth) + (myStartMonth * monthSegmentWidth);
+
+			float endX;
+			Date endDate;
+			if(event.getEndDate() != null) {
+				endDate = event.getEndDate();
+			} else {
+				endDate = Calendar.getInstance().getTime();
+			}
+
+			int myEndYear = DateUtils.getYear(endDate);
+			int myEndMonth = DateUtils.getMonth(endDate);
+				
+			endX = ((myEndYear - startYear) * yearSegmentWidth) + (myEndMonth * monthSegmentWidth);
+
+			Path path = new Path();
+			path.moveTo(startX, 199).arc(endX, 199, (endX - startX), (endX - startX), 0, false, true).close();
+			svgBuilder.addPath(path);
+		}
+		
+		return svgBuilder.toString();
 	}
 	
 	private TimeLine createTimeLineCode(List<Event> events) {

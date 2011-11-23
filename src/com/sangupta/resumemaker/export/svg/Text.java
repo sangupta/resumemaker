@@ -15,31 +15,46 @@
  * limitations under the License.
  * 
  */
-package com.sangupta.resumemaker.github;
+package com.sangupta.resumemaker.export.svg;
 
-import java.util.Date;
-
-public class GitHubCommitData implements Comparable<GitHubCommitData> {
+public class Text {
 	
-	public String repositoryID;
+	private float x;
 	
-	public String sha;
+	private float y;
 	
-	public Date createdAt;
+	private String text;
 	
-	public int additions;
-	
-	public int deletions;
-	
-	public int filesImpacted;
-
-	@Override
-	public int compareTo(GitHubCommitData other) {
-		if(other == null) {
-			return -1;
-		}
-		
-		return this.createdAt.compareTo(other.createdAt);
+	public Text(float x, float y, String text) {
+		this.x = x;
+		this.y = y;
+		this.text = text;
 	}
 	
+	// Usual accessors follow
+
+	public float getX() {
+		return x;
+	}
+
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void setY(float y) {
+		this.y = y;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
 }
