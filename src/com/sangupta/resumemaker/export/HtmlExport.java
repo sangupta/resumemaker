@@ -44,7 +44,6 @@ import com.sangupta.resumemaker.export.svg.Text;
 import com.sangupta.resumemaker.github.GitHubCommitData;
 import com.sangupta.resumemaker.linkedin.LinkedInHelper;
 import com.sangupta.resumemaker.model.Event;
-import com.sangupta.resumemaker.model.TimeLine;
 import com.sangupta.resumemaker.model.UserData;
 import com.sangupta.resumemaker.util.DateUtils;
 
@@ -120,11 +119,9 @@ public class HtmlExport implements Exporter {
 		// build education time line
 		events = new ArrayList<Event>();
 		for(Education education : userData.linkedInUserData.getEducations()) {
-			if(education.getDegree() != null) {
-				Event event = new Event(education.getSchoolName(), LinkedInHelper.fromStartDate(education.getStartDate()), LinkedInHelper.fromEndDate(education.getEndDate()));
-				event.setDescription(education.getDegree());
-				events.add(event);
-			}
+			Event event = new Event(education.getSchoolName(), LinkedInHelper.fromStartDate(education.getStartDate()), LinkedInHelper.fromEndDate(education.getEndDate()));
+			event.setDescription(education.getDegree());
+			events.add(event);
 		}
 		context.put("educations", events);
 		context.put("educationTimeLine", createSVGTimeLineCode(events));
@@ -209,8 +206,10 @@ public class HtmlExport implements Exporter {
 				float x = ((myYear - startYear) * yearSegmentWidth) + ((myWeek - 1) * weekSegmentWidth);
 				float y = totalLines * lineFactor;
 
-				Line line = new Line(lastX, BASE_LINE - lastY, x, BASE_LINE - y);
-				svgBuilder.addLine(line);
+				if(!(y == lastY && y == 0.0)) {
+					Line line = new Line(lastX, BASE_LINE - lastY, x, BASE_LINE - y);
+					svgBuilder.addLine(line);
+				}
 				
 				lastMyYear = myYear;
 				lastMyWeek = myWeek;
@@ -292,55 +291,6 @@ public class HtmlExport implements Exporter {
 		}
 		
 		return svgBuilder.toString();
-	}
-	
-	private TimeLine createTimeLineCode(List<Event> events) {
-		if(events == null) {
-			return null;
-		}
-		
-		// sort the collection based on the dates
-		Collections.sort(events);
-		
-		// start finding the segment widths
-		// and build up the array
-		final int startYear = DateUtils.getYear(events.get(0).getStartDate());
-		final int endYear = DateUtils.getYear(events.get(events.size() - 1).getEndDate()) + 2; // add TWO to make sure that we if we are nearing the end of the current year, then we have enough space at the end of the graph
-		
-		float totalYearSegments = endYear - startYear;  
-		final float yearSegmentWidth = 100 / totalYearSegments;
-		final float monthSegmentWidth = yearSegmentWidth / 12;
-		
-		// modify the original events to include the start and end coordinates
-		for(Event event : events) {
-			int myStartYear = DateUtils.getYear(event.getStartDate());
-			int myStartMonth = DateUtils.getMonth(event.getStartDate());
-			
-			float startCoord = ((myStartYear - startYear) * yearSegmentWidth) + (myStartMonth * monthSegmentWidth);
-
-			float endCoord;
-			Date endDate;
-			if(event.getEndDate() != null) {
-				endDate = event.getEndDate();
-			} else {
-				endDate = Calendar.getInstance().getTime();
-			}
-
-			int myEndYear = DateUtils.getYear(endDate);
-			int myEndMonth = DateUtils.getMonth(endDate);
-				
-			endCoord = ((myEndYear - startYear) * yearSegmentWidth) + (myEndMonth * monthSegmentWidth);
-			
-			event.setCoords(startCoord, endCoord);
-		}
-		
-		// build up the year list to be thrown back
-		List<String> years = new ArrayList<String>();
-		for(int year = startYear; year < endYear; year++) {
-			years.add(String.valueOf(year));
-		}
-		
-		return new TimeLine(years, yearSegmentWidth);
 	}
 	
 }

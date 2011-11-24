@@ -66,8 +66,9 @@ public class LinkedInAnalyzer implements Analyzer {
 		
 		Person profile = client.getProfileForCurrentUser(EnumSet.of(ProfileField.FIRST_NAME, ProfileField.LAST_NAME, ProfileField.HEADLINE, ProfileField.SUMMARY, 
 				ProfileField.RECOMMENDATIONS_RECEIVED, ProfileField.INTERESTS, ProfileField.ASSOCIATIONS, ProfileField.HONORS, ProfileField.SPECIALTIES, 
-				ProfileField.POSITIONS, ProfileField.PUBLICATIONS, ProfileField.SKILLS, ProfileField.PATENTS, ProfileField.CERTIFICATIONS,
-				ProfileField.EDUCATIONS));
+				ProfileField.POSITIONS, ProfileField.PUBLICATIONS, ProfileField.SKILLS, ProfileField.PATENTS, ProfileField.CERTIFICATIONS, ProfileField.CERTIFICATIONS_NAME,
+				ProfileField.EDUCATIONS, ProfileField.CERTIFICATIONS_AUTHORITY, ProfileField.CERTIFICATIONS_AUTHORITY_NAME, ProfileField.CERTIFICATIONS_START_DATE, 
+				ProfileField.CERTIFICATIONS_END_DATE));
 		
 		// get the details
 		linkedInUserData.setName(profile.getFirstName() + " " + profile.getLastName());

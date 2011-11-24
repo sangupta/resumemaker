@@ -22,6 +22,26 @@
 				<div>
 					$positionsTimeLine
 				</div>
+				<div>
+					#foreach($pos in $linkedin.positions)
+					<div class="position">
+						<div class="companyName">$pos.company.name</div>
+						<div class="dates">
+							#if($pos.startDate || $pos.endDate)
+								#if($pos.startDate && $pos.endDate)
+									$pos.startDate.month / $pos.startDate.year - $pos.endDate.month / $pos.endDate.year
+								#elseif($pos.startDate)
+									$pos.startDate.month / $pos.startDate.year - Present
+								#elseif($pos.endDate)
+									&lt;unknown&gt; - $pos.endDate.month / $pos.endDate.year
+								#end
+							#end
+						</div>
+						<div class="title">$pos.title</div>
+						<div class="summary">$pos.summary</div>
+					</div>
+					#end
+				</div>
 			</article>
 		</section>
 		#end
@@ -36,8 +56,8 @@
 			<article>
 				#foreach($cert in $linkedin.certifications)
 					<div class="certificate">
-						$cert.name
-						<i>
+						<div class="certName">$cert.name</div>
+						<div class="dates">
 							#if($cert.startDate.year || $cert.endDate.year)
 								#if($cert.startDate.year && !$cert.endDate.year)
 									, $cert.startDate.year
@@ -47,7 +67,8 @@
 									, $cert.startDate.year - $cert.endDate.year
 								#end
 							#end
-						</i>
+						</div>
+						<div class="authority">$cert.authority.name</div>
 					</div>
 				#end
 			</article>
@@ -103,7 +124,52 @@
 		<section id="education">
 			<h2>Education</h2>
 			<article>
-				$educationTimeLine
+				<div class="timeline">
+					$educationTimeLine
+				</div>
+				<div>
+					#foreach($edu in $linkedin.educations)
+					<div class="education">
+						<div class="schoolName">$edu.schoolName</div>
+						<div class="degree">
+							#if($edu.degree)
+								$edu.degree
+							#end
+							#if($edu.fieldOfStudy)
+								#if($edu.degree)
+									,
+								#end
+								$edu.fieldOfStudy
+							#end
+						</div>
+						<div class="dates">
+							#if($edu.startDate || $edu.endDate)
+								#if($edu.startDate && $edu.endDate)
+									$edu.startDate.month / $edu.startDate.year - $edu.endDate.month / $edu.endDate.year
+								#elseif($edu.startDate)
+									$edu.startDate.month / $edu.startDate.year - Present
+								#elseif($edu.endDate)
+									&lt;unknown&gt; - $edu.endDate.month / $edu.endDate.year
+								#end
+							#end
+						</div>
+						<div class="summary">
+							#if($edu.activities)
+								$edu.activities
+							#else
+								&nbsp;
+							#end
+						</div>
+						<div class="notes">
+							#if($edu.notes)
+								$edu.notes
+							#else
+								&nbsp;
+							#end
+						</div>
+					</div>
+					#end
+				</div>
 			</article>
 		</section>
 		#end
