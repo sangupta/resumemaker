@@ -24,13 +24,12 @@ import org.apache.velocity.context.InternalContextAdapter;
 import org.apache.velocity.exception.MethodInvocationException;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
-import org.apache.velocity.runtime.directive.Directive;
 import org.apache.velocity.runtime.parser.node.Node;
 
 import com.google.code.linkedinapi.schema.EndDate;
 import com.google.code.linkedinapi.schema.StartDate;
 
-public class LinkedInDatesDirective extends Directive {
+public class LinkedInDatesDirective extends AbstractDirective {
 
 	@Override
 	public String getName() {
@@ -107,12 +106,4 @@ public class LinkedInDatesDirective extends Directive {
 		return true;
 	}
 	
-	private Object getArgument(Node node, InternalContextAdapter context, int index) {
-		if(node.jjtGetNumChildren() > index && node.jjtGetChild(index) != null) {
-			return node.jjtGetChild(index).value(context);
-		}
-		
-		return null;
-	}
-
 }

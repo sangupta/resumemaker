@@ -47,6 +47,7 @@ import com.sangupta.resumemaker.model.Event;
 import com.sangupta.resumemaker.model.UserData;
 import com.sangupta.resumemaker.util.DateUtils;
 import com.sangupta.resumemaker.velocity.directives.LinkedInDatesDirective;
+import com.sangupta.resumemaker.velocity.directives.MarkdownDirective;
 
 public class HtmlExport implements Exporter {
 	
@@ -59,6 +60,17 @@ public class HtmlExport implements Exporter {
 	private static final VelocityEngine engine = new VelocityEngine();
 	
 	static {
+		final String[] customDirectives = { LinkedInDatesDirective.class.getName(), 
+				MarkdownDirective.class.getName() };
+		
+		StringBuilder builder = new StringBuilder();
+		for(String directive : customDirectives) {
+			builder.append(directive).append(",");
+		}
+		builder.deleteCharAt(builder.length() - 1);
+		
+		final String directives = builder.toString();
+		
 		File file = new File(TEMPLATE_FOLDER);
 		if(!file.exists()) {
 			throw new RuntimeException("Cannot find template at " + file.getAbsolutePath());
@@ -70,7 +82,7 @@ public class HtmlExport implements Exporter {
 		Properties properties = new Properties();
 		properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file");
 		properties.setProperty("file" + VelocityEngine.RESOURCE_LOADER + ".class", FileResourceLoader.class.getName());
-		properties.setProperty("userdirective", LinkedInDatesDirective.class.getName());
+		properties.setProperty("userdirective", directives);
 		
 		properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, file.getParentFile().getAbsolutePath());
 		
