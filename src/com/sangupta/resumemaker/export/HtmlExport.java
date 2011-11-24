@@ -46,6 +46,7 @@ import com.sangupta.resumemaker.linkedin.LinkedInHelper;
 import com.sangupta.resumemaker.model.Event;
 import com.sangupta.resumemaker.model.UserData;
 import com.sangupta.resumemaker.util.DateUtils;
+import com.sangupta.resumemaker.velocity.directives.LinkedInDatesDirective;
 
 public class HtmlExport implements Exporter {
 	
@@ -69,6 +70,7 @@ public class HtmlExport implements Exporter {
 		Properties properties = new Properties();
 		properties.setProperty(VelocityEngine.RESOURCE_LOADER, "file");
 		properties.setProperty("file" + VelocityEngine.RESOURCE_LOADER + ".class", FileResourceLoader.class.getName());
+		properties.setProperty("userdirective", LinkedInDatesDirective.class.getName());
 		
 		properties.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, file.getParentFile().getAbsolutePath());
 		
@@ -187,7 +189,7 @@ public class HtmlExport implements Exporter {
 		// normalize the maximum value
 		final float lineFactor = 500f / maxLines;
 		
-		System.out.println("Line factor: " + lineFactor);
+		// System.out.println("Line factor: " + lineFactor);
 		
 		float totalLines = 0;
 		int lastMyYear = 0;
@@ -214,7 +216,7 @@ public class HtmlExport implements Exporter {
 				lastMyYear = myYear;
 				lastMyWeek = myWeek;
 				
-				System.out.println("Week " + myWeek + " of year " + myYear + " had totalLines of " + totalLines + " as (" + x + ", " + y + ")");
+				// System.out.println("Week " + myWeek + " of year " + myYear + " had totalLines of " + totalLines + " as (" + x + ", " + y + ")");
 				
 				lastX = x;
 				lastY = y;
