@@ -25,10 +25,20 @@ public class Text {
 	
 	private String text;
 	
+	private String textAnchor;
+	
+	private String styleClass;
+	
 	public Text(float x, float y, String text) {
 		this.x = x;
 		this.y = y;
 		this.text = text;
+	}
+	
+	public Text(float x, float y, String text, String textAnchor, String styleClass) {
+		this(x, y, text);
+		this.textAnchor = textAnchor;
+		this.styleClass = styleClass;
 	}
 	
 	// Usual accessors follow
@@ -55,6 +65,22 @@ public class Text {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getTextAnchor() {
+		return textAnchor;
+	}
+
+	public void setTextAnchor(String textAnchor) {
+		this.textAnchor = textAnchor;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
 	}
 
 }

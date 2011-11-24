@@ -50,8 +50,12 @@ public class SVGBuilder {
 		builder.append("<text ");
 		addParam(builder, "x", text.getX());
 		addParam(builder, "y", text.getY());
-		addParam(builder, "text-anchor", "middle");
-		addParam(builder, "class", "xAxisLabels");
+		if(text.getTextAnchor() != null) {
+			addParam(builder, "text-anchor", text.getTextAnchor());
+		}
+		if(text.getStyleClass() != null) {
+			addParam(builder, "class", text.getStyleClass());
+		}
 		builder.append(" ><tspan>");
 		builder.append(text.getText());
 		builder.append("</tspan></text>");

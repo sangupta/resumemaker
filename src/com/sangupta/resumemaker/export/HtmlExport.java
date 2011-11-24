@@ -46,6 +46,7 @@ import com.sangupta.resumemaker.linkedin.LinkedInHelper;
 import com.sangupta.resumemaker.model.Event;
 import com.sangupta.resumemaker.model.UserData;
 import com.sangupta.resumemaker.util.DateUtils;
+import com.sangupta.resumemaker.util.HtmlUtils;
 import com.sangupta.resumemaker.velocity.directives.LinkedInDatesDirective;
 import com.sangupta.resumemaker.velocity.directives.MarkdownDirective;
 
@@ -107,7 +108,9 @@ public class HtmlExport implements Exporter {
 		}
 		
 		try {
-			FileUtils.write(exportFile, writer.toString());
+			String unformattedHTML = writer.toString();
+			String formattedHTML = HtmlUtils.tidyHtml(unformattedHTML);
+			FileUtils.write(exportFile, formattedHTML);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -168,13 +171,14 @@ public class HtmlExport implements Exporter {
 		final float yearSegmentWidth = GRAPHIC_WIDTH / totalYearSegments;
 		final float weekSegmentWidth = yearSegmentWidth / 52;
 
+		final int X_AXIS_MOVED = 100;
 		final int HEIGHT_OF_GRAPH = 250;
 		final int THICKNESS = 3;
 		
-		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH, HEIGHT_OF_GRAPH + 50);
+		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH + X_AXIS_MOVED, HEIGHT_OF_GRAPH + 50);
 		
 		// create the basic timeline
-		Rectangle rectangle = new Rectangle(0, HEIGHT_OF_GRAPH, GRAPHIC_WIDTH, THICKNESS);
+		Rectangle rectangle = new Rectangle(0 + X_AXIS_MOVED, HEIGHT_OF_GRAPH, GRAPHIC_WIDTH, THICKNESS);
 		svgBuilder.addRectangle(rectangle);
 		
 		final float textAdditive = yearSegmentWidth * 0.5f;
@@ -184,11 +188,11 @@ public class HtmlExport implements Exporter {
 			float x = yearSegmentWidth * index;
 			
 			// add the year vertical bar distinguisher
-			rectangle = new Rectangle(x, HEIGHT_OF_GRAPH, THICKNESS, 10);
+			rectangle = new Rectangle(x + X_AXIS_MOVED, HEIGHT_OF_GRAPH, THICKNESS, 10);
 			svgBuilder.addRectangle(rectangle);
 			
 			// add the year number
-			Text text = new Text(x + textAdditive, HEIGHT_OF_GRAPH + 20f, String.valueOf(year));
+			Text text = new Text(x + textAdditive + X_AXIS_MOVED, HEIGHT_OF_GRAPH + 20f, String.valueOf(year), "middle", "xAxisLabels");
 			svgBuilder.addText(text);
 		}
 
@@ -200,6 +204,22 @@ public class HtmlExport implements Exporter {
 
 		// normalize the maximum value
 		final float lineFactor = HEIGHT_OF_GRAPH / maxLines;
+		
+		// create the Y-AXIS
+		rectangle = new Rectangle(X_AXIS_MOVED, 0, THICKNESS, HEIGHT_OF_GRAPH);
+		svgBuilder.addRectangle(rectangle);
+		
+		final int Y_AXIS_DIVISIONS = 5;
+		float yInterval = maxLines / Y_AXIS_DIVISIONS;
+		for(int count = 0; count < Y_AXIS_DIVISIONS; count++) {
+			float lines = count * yInterval;
+			float y = lines * lineFactor;
+			rectangle = new Rectangle(X_AXIS_MOVED - 10, y, 10, THICKNESS);
+			svgBuilder.addRectangle(rectangle);
+			
+			Text text = new Text(X_AXIS_MOVED - 15, HEIGHT_OF_GRAPH - y + 5, String.valueOf(((int) lines)), "end", "yAxisLabels");
+			svgBuilder.addText(text);
+		}
 		
 		// System.out.println("Line factor: " + lineFactor);
 		
@@ -221,7 +241,7 @@ public class HtmlExport implements Exporter {
 				float y = totalLines * lineFactor;
 
 				if(!(y == lastY && y == 0.0)) {
-					Line line = new Line(lastX, HEIGHT_OF_GRAPH - lastY, x, HEIGHT_OF_GRAPH - y);
+					Line line = new Line(lastX + X_AXIS_MOVED, HEIGHT_OF_GRAPH - lastY, x + X_AXIS_MOVED, HEIGHT_OF_GRAPH - y);
 					svgBuilder.addLine(line);
 				}
 				
