@@ -176,9 +176,10 @@
 		<section id="recommendations">
 			<h2>Recommendations</h2>
 			<article>
+				#set($className = $alternator.auto('Left', 'Right'))
 				#foreach($rec in $linkedin.recommendations)
 					<div class="recommendation">
-						<div class="recommendee">
+						<div class="recommendee$className">
 							<div class="recommendedBy">$rec.recommender.firstName $rec.recommender.lastName</div>
 							<div class="recommendationType">$rec.recommendationType.code.name()</div>
 						</div>
@@ -200,7 +201,6 @@
 		<section id="openSource">
 			<h2>Open Source</h2>
 			<article>
-				<h3>Commit Line</h3>
 				<div class="githubGraph">
 					$githubGraph
 				</div>

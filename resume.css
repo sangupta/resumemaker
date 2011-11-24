@@ -40,6 +40,7 @@ footer {
 header {
 	background-color: #B0C087;
 	color: #FFF;
+	position: relative;
 }
 /**
 Generic classes
@@ -69,11 +70,16 @@ header p {
 }
 header .image {
 	float: right;
-	position: relative;
+	position: absolute;
+	top: 10px;
+	right: 10px;
 }
 /**
 Section values
 */
+section {
+	clear: both;
+}
 section h2 {
 	text-align: center;
 	font-size: 36px;
@@ -119,7 +125,8 @@ recommendation bullets
 */
 .recommendation {
 	clear: both;
-	margin-top: 10px;
+	padding-top: 10px;
+	padding-bottom: 20px;
 	position: relative;
 }
 .recommendationType {
@@ -151,16 +158,23 @@ recommendation bullets
 	bottom: -10px;
 	right: 0px;
 }
-.recommendee {
+.recommendeeLeft {
 	width: 100px;
 	float: left;
 	padding-right: 40px;
+	margin-top: 1em;
+}
+.recommendeeRight {
+	width: 100px;
+	float: right;
+	padding-left: 40px;
 	margin-top: 1em;
 }
 .recommendationDetails {
 	width: 800px;
 	position: relative;
 	display: table-row;
+	float: left;
 }
 /** certifications */
 .certName {
@@ -227,4 +241,14 @@ schools
 	font-size: 24px;
 	font-style: italic;
 	float: left;
+}
+/**
+skills
+*/
+.skill {
+	width: 310px;
+	display: block;
+	float: left;
+	padding-top: 10px;
+	padding-bottom: 10px;
 }

@@ -31,7 +31,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.tools.VelocityFormatter;
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
+import org.apache.velocity.tools.generic.AlternatorTool;
 
 import com.google.code.linkedinapi.schema.Education;
 import com.google.code.linkedinapi.schema.Position;
@@ -147,7 +149,11 @@ public class HtmlExport implements Exporter {
 		userData.gitHubData.sortRepositories();
 		context.put("github", userData.gitHubData);
 		context.put("githubGraph", createGithubGraph(userData.gitHubData.getCommitDatas()));
+
+		// for alternating rows
+		context.put("alternator", new AlternatorTool());
 		
+		// return the final context back
 		return context;
 	}
 
@@ -181,6 +187,11 @@ public class HtmlExport implements Exporter {
 		Rectangle rectangle = new Rectangle(0 + X_AXIS_MOVED, HEIGHT_OF_GRAPH, GRAPHIC_WIDTH, THICKNESS);
 		svgBuilder.addRectangle(rectangle);
 		
+		// add the caption
+		Text text = new Text(GRAPHIC_WIDTH / 2, HEIGHT_OF_GRAPH + 50, "Commit Timeline");
+		svgBuilder.addText(text);
+		
+		// add X-axis labels
 		final float textAdditive = yearSegmentWidth * 0.5f;
 		
 		for(int year = startYear; year < endYear; year++) {
@@ -192,7 +203,7 @@ public class HtmlExport implements Exporter {
 			svgBuilder.addRectangle(rectangle);
 			
 			// add the year number
-			Text text = new Text(x + textAdditive + X_AXIS_MOVED, HEIGHT_OF_GRAPH + 20f, String.valueOf(year), "middle", "xAxisLabels");
+			text = new Text(x + textAdditive + X_AXIS_MOVED, HEIGHT_OF_GRAPH + 20f, String.valueOf(year), "middle", "xAxisLabels");
 			svgBuilder.addText(text);
 		}
 
@@ -217,7 +228,7 @@ public class HtmlExport implements Exporter {
 			rectangle = new Rectangle(X_AXIS_MOVED - 10, y, 10, THICKNESS);
 			svgBuilder.addRectangle(rectangle);
 			
-			Text text = new Text(X_AXIS_MOVED - 15, HEIGHT_OF_GRAPH - y + 5, String.valueOf(((int) lines)), "end", "yAxisLabels");
+			text = new Text(X_AXIS_MOVED - 15, HEIGHT_OF_GRAPH - y + 5, String.valueOf(((int) lines)), "end", "yAxisLabels");
 			svgBuilder.addText(text);
 		}
 		
@@ -295,7 +306,7 @@ public class HtmlExport implements Exporter {
 			svgBuilder.addRectangle(rectangle);
 			
 			// add the year number
-			Text text = new Text(x + textAdditive, 220f, String.valueOf(year));
+			Text text = new Text(x + textAdditive, 220f, String.valueOf(year), "middle", "xAxisLabels");
 			svgBuilder.addText(text);
 		}
 		
