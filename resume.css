@@ -1,0 +1,230 @@
+/**
+Generics definitions
+*/
+html {
+font-family: Georgia, "Times New Roman", Times, serif;
+font-family: arial,sans-serif;
+}
+body {
+	background-color: #FFF;
+	width: 940px;
+	margin: 0px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+}
+/**
+In case we want to display the box shadow around
+body {
+	margin-top: 50px;
+	-moz-box-shadow: #dddddd 1px 1px 10px 6px;
+-webkit-box-shadow: #dddddd 1px 1px 10px 6px;
+-o-box-shadow: #dddddd 1px 1px 10px 6px;
+box-shadow: #dddddd 1px 1px 10px 6px;
+}
+*/
+svg {
+	margin: 0px;
+	margin-left: auto;
+	margin-right: auto;
+}
+footer {
+	background-color: #EEE;
+	margin-top: 100px;
+	padding: 30px 0;
+	text-shadow: 0 1px 0 white;
+	border-top: 1px solid #E5E5E5;
+	-webkit-box-shadow: inset 0 5px 15px rgba(0, 0, 0, .025);
+}
+
+header {
+	background-color: #B0C087;
+	color: #FFF;
+}
+/**
+Generic classes
+*/
+.clear {
+	clear: both;
+}
+/**
+Header section
+*/
+header h1 {
+	margin: 0px;
+	font-size: 48px;
+	font-weight: bold;
+}
+
+header h3 {
+	font-size: 18px;
+font-style: italic;
+font-weight: normal;
+line-height: 20px;
+}
+
+header p {
+	font-size: 16px;
+	vertical-align: baseline;
+}
+header .image {
+	float: right;
+	position: relative;
+}
+/**
+Section values
+*/
+section h2 {
+	text-align: center;
+	font-size: 36px;
+	font-style: bold;
+	text-transform: uppercase;
+	border-bottom: 1px solid #880;
+}
+
+/** Bar graph tops */
+.topRounderCorners {
+	-webkit-border-radius: 10px 10px 0px 0px;
+	-moz-border-radius: 10px 10px 0px 0px;
+	border-radius: 10px 10px 0px 0px;
+}
+/**
+timelines
+*/
+.timeLine {
+	min-height: 100px;
+	padding-top: 100px;
+}
+
+.columns {
+	float: left;
+	text-align: center;
+	border-left: 3px solid;
+	height: 5px;
+	margin-left: -3px;
+}
+
+.dataColumns {
+	float: left;
+	text-align: center;
+	border: 1px solid;
+	border-bottom-width: 0px;
+	-webkit-border-radius: 10px 10px 0px 0px;
+	-moz-border-radius: 10px 10px 0px 0px;
+	border-radius: 10px 10px 0px 0px;
+	height: 50px;
+}
+/**
+recommendation bullets
+*/
+.recommendation {
+	clear: both;
+	margin-top: 10px;
+	position: relative;
+}
+.recommendationType {
+	text-transform: lowercase;
+	font-size: 14px;
+	font-style: italic;
+}
+.recommendedBy {
+	font-size: 14px;
+	float: left;
+}
+.recommendationText{
+	font-size: 14px;
+	text-align: justify;
+	width: 750px;
+	float: left;
+}
+.openQuote {
+	width: 25px;
+	float: left;
+	font-size: 48px;
+}
+.closeQuote {
+	width: 25px;
+	float: left;
+	text-align: right;
+	font-size: 48px;
+	position: absolute;
+	bottom: -10px;
+	right: 0px;
+}
+.recommendee {
+	width: 100px;
+	float: left;
+	padding-right: 40px;
+	margin-top: 1em;
+}
+.recommendationDetails {
+	width: 800px;
+	position: relative;
+	display: table-row;
+}
+/** certifications */
+.certName {
+float: left;
+font-size: 24px;
+font-style: italic;
+}
+.dates {
+float: right;
+font-size: 14px;
+}
+.authority {
+font-size: 14px;
+}
+.certificate {
+	margin-bottom: 20px;
+}
+/**
+SVG graph
+*/
+.svgGraph, .githubGraph {
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-bottom: 30px;
+}
+.githubGraph {
+width: 900px;
+}
+/**
+details of any heading with date
+*/
+.details {
+	clear: both;
+	position: relative;
+}
+/**
+job positions
+*/
+.companyName {
+	font-size: 24px;
+	font-style: italic;
+	float: left;
+}
+.title {
+	font-size: 14px;
+}
+.summary {
+	margin-top: 20px;
+	font-size: 14px;
+}
+.position {
+	margin-top: 25px;
+}
+
+.xAxisLabels, .yAxisLabels {
+	font-size: 12px;
+}
+
+/**
+schools
+*/
+.schoolName {
+	font-size: 24px;
+	font-style: italic;
+	float: left;
+}
