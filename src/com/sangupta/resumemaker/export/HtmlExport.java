@@ -168,13 +168,13 @@ public class HtmlExport implements Exporter {
 		final float yearSegmentWidth = GRAPHIC_WIDTH / totalYearSegments;
 		final float weekSegmentWidth = yearSegmentWidth / 52;
 
-		final int BASE_LINE = 500;
+		final int HEIGHT_OF_GRAPH = 250;
 		final int THICKNESS = 3;
 		
-		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH, 550);
+		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH, HEIGHT_OF_GRAPH + 50);
 		
 		// create the basic timeline
-		Rectangle rectangle = new Rectangle(0, BASE_LINE, GRAPHIC_WIDTH, THICKNESS);
+		Rectangle rectangle = new Rectangle(0, HEIGHT_OF_GRAPH, GRAPHIC_WIDTH, THICKNESS);
 		svgBuilder.addRectangle(rectangle);
 		
 		final float textAdditive = yearSegmentWidth * 0.5f;
@@ -184,11 +184,11 @@ public class HtmlExport implements Exporter {
 			float x = yearSegmentWidth * index;
 			
 			// add the year vertical bar distinguisher
-			rectangle = new Rectangle(x, BASE_LINE, THICKNESS, 10);
+			rectangle = new Rectangle(x, HEIGHT_OF_GRAPH, THICKNESS, 10);
 			svgBuilder.addRectangle(rectangle);
 			
 			// add the year number
-			Text text = new Text(x + textAdditive, BASE_LINE + 20f, String.valueOf(year));
+			Text text = new Text(x + textAdditive, HEIGHT_OF_GRAPH + 20f, String.valueOf(year));
 			svgBuilder.addText(text);
 		}
 
@@ -199,7 +199,7 @@ public class HtmlExport implements Exporter {
 		}
 
 		// normalize the maximum value
-		final float lineFactor = 500f / maxLines;
+		final float lineFactor = HEIGHT_OF_GRAPH / maxLines;
 		
 		// System.out.println("Line factor: " + lineFactor);
 		
@@ -221,7 +221,7 @@ public class HtmlExport implements Exporter {
 				float y = totalLines * lineFactor;
 
 				if(!(y == lastY && y == 0.0)) {
-					Line line = new Line(lastX, BASE_LINE - lastY, x, BASE_LINE - y);
+					Line line = new Line(lastX, HEIGHT_OF_GRAPH - lastY, x, HEIGHT_OF_GRAPH - y);
 					svgBuilder.addLine(line);
 				}
 				

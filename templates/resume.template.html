@@ -122,19 +122,19 @@
 					#foreach($edu in $linkedin.educations)
 					<div class="education">
 						<div class="schoolName">$edu.schoolName</div>
-						<div class="degree">
-							#if($edu.degree)
-								$edu.degree
-							#end
-							#if($edu.fieldOfStudy)
-								#if($edu.degree)
-									,
-								#end
-								$edu.fieldOfStudy
-							#end
-						</div>
 						<div class="dates">#linkedInDates($edu.startDate, $edu.endDate)</div>
 						<div class="details">
+							<div class="degree">
+								#if($edu.degree)
+									$edu.degree
+								#end
+								#if($edu.fieldOfStudy)
+									#if($edu.degree)
+										,
+									#end
+									$edu.fieldOfStudy
+								#end
+							</div>
 							<div class="summary">
 								#if($edu.activities)
 									$edu.activities
@@ -144,7 +144,7 @@
 							</div>
 							<div class="notes">
 								#if($edu.notes)
-									$edu.notes
+									#markdown($edu.notes)
 								#else
 									&nbsp;
 								#end
@@ -177,10 +177,17 @@
 			<h2>Recommendations</h2>
 			<article>
 				#foreach($rec in $linkedin.recommendations)
-					<blockquote>
-						<p>$rec.recommendationText</p>
-						<small>$rec.recommender.firstName $rec.recommender.lastName<em>, $rec.recommendationType.code.name()</em></small>
-					</blockquote>
+					<div class="recommendation">
+						<div class="recommendee">
+							<div class="recommendedBy">$rec.recommender.firstName $rec.recommender.lastName</div>
+							<div class="recommendationType">$rec.recommendationType.code.name()</div>
+						</div>
+						<div class="details">
+							<div class="openQuote" ></div>
+							<p class="recommendationText">$rec.recommendationText</p>
+							<div class="closeQuote" ></div>
+						</div>
+					</div>
 				#end
 			</article>
 		</section>

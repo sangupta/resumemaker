@@ -51,6 +51,7 @@ public class SVGBuilder {
 		addParam(builder, "x", text.getX());
 		addParam(builder, "y", text.getY());
 		addParam(builder, "text-anchor", "middle");
+		addParam(builder, "class", "xAxisLabels");
 		builder.append(" ><tspan>");
 		builder.append(text.getText());
 		builder.append("</tspan></text>");
