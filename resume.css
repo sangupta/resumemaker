@@ -201,6 +201,13 @@ SVG graph
 	margin-right: auto;
 	padding-bottom: 30px;
 }
+.graphGridLines {
+	stroke: #ccc;
+	fill: #ccc;
+}
+.trendLine {
+	stroke: #ff0000;
+}
 .githubGraph {
 width: 900px;
 }

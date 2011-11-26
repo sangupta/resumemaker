@@ -27,11 +27,18 @@ public class Line {
 	
 	private float y2;
 	
+	private String styleClass;
+	
 	public Line(float x1, float y1, float x2, float y2) {
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
+	}
+	
+	public Line(float x1, float y1, float x2, float y2, String styleClass) {
+		this(x1, y1, x2, y2);
+		this.styleClass = styleClass;
 	}
 	
 	// Usual accessors follow
@@ -50,6 +57,10 @@ public class Line {
 
 	public float getY2() {
 		return y2;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
 	}
 	
 }

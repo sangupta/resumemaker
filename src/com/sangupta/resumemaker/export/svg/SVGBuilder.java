@@ -42,6 +42,9 @@ public class SVGBuilder {
 		addParam(builder, "y", rectangle.getY());
 		addParam(builder, "width", rectangle.getWidth());
 		addParam(builder, "height", rectangle.getHeight());
+		if(rectangle.getStyleClass() != null) {
+			addParam(builder, "class", rectangle.getStyleClass());
+		}
 		builder.append(" ></rect>");
 		builder.append(NEW_LINE);
 	}
@@ -68,7 +71,11 @@ public class SVGBuilder {
 		addParam(builder, "y1", line.getY1());
 		addParam(builder, "x2", line.getX2());
 		addParam(builder, "y2", line.getY2());
-		addParam(builder, "style", "stroke: rgb(255,0,0); stroke-width: 2");
+		if(line.getStyleClass() != null) {
+			addParam(builder, "class", line.getStyleClass());
+		} else {
+			addParam(builder, "style", "stroke: rgb(255,0,0); stroke-width: 2");
+		}
 		builder.append(" ></line>");
 		builder.append(NEW_LINE);
 	}
@@ -77,6 +84,15 @@ public class SVGBuilder {
 		builder.append("<path ");
 		addParam(builder, "d", path.getCommands());
 		builder.append(" ></path>");
+		builder.append(NEW_LINE);
+	}
+
+	public void addCircle(Circle circle) {
+		builder.append("<circle ");
+		addParam(builder, "cx", circle.getX());
+		addParam(builder, "cy", circle.getY());
+		addParam(builder, "r", circle.getRadius());
+		builder.append(" ></circle>");
 		builder.append(NEW_LINE);
 	}
 

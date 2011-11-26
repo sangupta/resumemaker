@@ -31,13 +31,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.app.tools.VelocityFormatter;
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.apache.velocity.tools.generic.AlternatorTool;
 
 import com.google.code.linkedinapi.schema.Education;
 import com.google.code.linkedinapi.schema.Position;
 import com.sangupta.resumemaker.Exporter;
+import com.sangupta.resumemaker.export.svg.Circle;
 import com.sangupta.resumemaker.export.svg.Line;
 import com.sangupta.resumemaker.export.svg.Path;
 import com.sangupta.resumemaker.export.svg.Rectangle;
@@ -54,6 +54,8 @@ import com.sangupta.resumemaker.velocity.directives.MarkdownDirective;
 
 public class HtmlExport implements Exporter {
 	
+	private static final int RADIUS_Y = 50;
+
 	private static final String TEMPLATE_NAME = "resume.template.html";
 	
 	private static final String TEMPLATE_FOLDER = "./templates/" + TEMPLATE_NAME;
@@ -129,7 +131,9 @@ public class HtmlExport implements Exporter {
 		// build linkedin jobs timeline
 		List<Event> events = new ArrayList<Event>();
 		for(Position position : userData.linkedInUserData.getPositions()) {
-			events.add(new Event(position.getCompany().getName(), LinkedInHelper.fromStartDate(position.getStartDate()), LinkedInHelper.fromEndDate(position.getEndDate())));
+			Event event = new Event(position.getCompany().getName(), LinkedInHelper.fromStartDate(position.getStartDate()), LinkedInHelper.fromEndDate(position.getEndDate()));
+			events.add(event);
+			event.setDescription(position.getTitle());
 		}
 		
 		context.put("positions", events);
@@ -184,7 +188,7 @@ public class HtmlExport implements Exporter {
 		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH + X_AXIS_MOVED, HEIGHT_OF_GRAPH + 50);
 		
 		// create the basic timeline
-		Rectangle rectangle = new Rectangle(0 + X_AXIS_MOVED, HEIGHT_OF_GRAPH, GRAPHIC_WIDTH, THICKNESS);
+		Rectangle rectangle = new Rectangle(0 + X_AXIS_MOVED, HEIGHT_OF_GRAPH, GRAPHIC_WIDTH, THICKNESS, "graphGridLines");
 		svgBuilder.addRectangle(rectangle);
 		
 		// add the caption
@@ -199,7 +203,7 @@ public class HtmlExport implements Exporter {
 			float x = yearSegmentWidth * index;
 			
 			// add the year vertical bar distinguisher
-			rectangle = new Rectangle(x + X_AXIS_MOVED, HEIGHT_OF_GRAPH, THICKNESS, 10);
+			rectangle = new Rectangle(x + X_AXIS_MOVED, HEIGHT_OF_GRAPH, THICKNESS, 10, "graphGridLines");
 			svgBuilder.addRectangle(rectangle);
 			
 			// add the year number
@@ -217,7 +221,7 @@ public class HtmlExport implements Exporter {
 		final float lineFactor = HEIGHT_OF_GRAPH / maxLines;
 		
 		// create the Y-AXIS
-		rectangle = new Rectangle(X_AXIS_MOVED, 0, THICKNESS, HEIGHT_OF_GRAPH);
+		rectangle = new Rectangle(X_AXIS_MOVED, 0, THICKNESS, HEIGHT_OF_GRAPH, "graphGridLines");
 		svgBuilder.addRectangle(rectangle);
 		
 		final int Y_AXIS_DIVISIONS = 5;
@@ -225,7 +229,7 @@ public class HtmlExport implements Exporter {
 		for(int count = 0; count < Y_AXIS_DIVISIONS; count++) {
 			float lines = count * yInterval;
 			float y = lines * lineFactor;
-			rectangle = new Rectangle(X_AXIS_MOVED - 10, y, 10, THICKNESS);
+			rectangle = new Rectangle(X_AXIS_MOVED - 10, y, 10, THICKNESS, "graphGridLines");
 			svgBuilder.addRectangle(rectangle);
 			
 			text = new Text(X_AXIS_MOVED - 15, HEIGHT_OF_GRAPH - y + 5, String.valueOf(((int) lines)), "end", "yAxisLabels");
@@ -252,7 +256,7 @@ public class HtmlExport implements Exporter {
 				float y = totalLines * lineFactor;
 
 				if(!(y == lastY && y == 0.0)) {
-					Line line = new Line(lastX + X_AXIS_MOVED, HEIGHT_OF_GRAPH - lastY, x + X_AXIS_MOVED, HEIGHT_OF_GRAPH - y);
+					Line line = new Line(lastX + X_AXIS_MOVED, HEIGHT_OF_GRAPH - lastY, x + X_AXIS_MOVED, HEIGHT_OF_GRAPH - y, "trendLine");
 					svgBuilder.addLine(line);
 				}
 				
@@ -292,7 +296,7 @@ public class HtmlExport implements Exporter {
 		SVGBuilder svgBuilder = new SVGBuilder(GRAPHIC_WIDTH, 250);
 		
 		// create the basic timeline
-		Rectangle rectangle = new Rectangle(0, BASE_LINE, GRAPHIC_WIDTH, THICKNESS);
+		Rectangle rectangle = new Rectangle(0, BASE_LINE, GRAPHIC_WIDTH, THICKNESS, "graphGridLines");
 		svgBuilder.addRectangle(rectangle);
 		
 		final float textAdditive = yearSegmentWidth * 0.5f;
@@ -302,7 +306,7 @@ public class HtmlExport implements Exporter {
 			float x = yearSegmentWidth * index;
 			
 			// add the year vertical bar distinguisher
-			rectangle = new Rectangle(x, 200, THICKNESS, 10);
+			rectangle = new Rectangle(x, 200, THICKNESS, 10, "graphGridLines");
 			svgBuilder.addRectangle(rectangle);
 			
 			// add the year number
@@ -315,6 +319,7 @@ public class HtmlExport implements Exporter {
 			int myStartYear = DateUtils.getYear(event.getStartDate());
 			int myStartMonth = DateUtils.getMonth(event.getStartDate());
 			
+			// compute the arc dimensions
 			float startX = ((myStartYear - startYear) * yearSegmentWidth) + (myStartMonth * monthSegmentWidth);
 
 			float endX;
@@ -329,13 +334,63 @@ public class HtmlExport implements Exporter {
 			int myEndMonth = DateUtils.getMonth(endDate);
 				
 			endX = ((myEndYear - startYear) * yearSegmentWidth) + (myEndMonth * monthSegmentWidth);
-
+			
+			final float mid = (endX + startX) / 2;
+			
 			Path path = new Path();
-			path.moveTo(startX, 199).arc(endX, 199, (endX - startX), (endX - startX), 0, false, true).close();
+			path.moveTo(startX, 199).arc(endX, 199, ((endX - startX) / 2), RADIUS_Y, 0, false, true).close();
 			svgBuilder.addPath(path);
+			
+			// compute the label path
+			Line line = new Line(mid, 112, mid, 160);
+			svgBuilder.addLine(line);
+			
+			// add the star or circle around the end
+			if(event.getEndDate() != null) {
+				Circle circle = new Circle(mid, 160, 3);
+				svgBuilder.addCircle(circle);
+			} else {
+				// for the last event on the timeline
+				// add a star
+				svgBuilder.addPath(createStarPath(mid, 160));
+			}
+			
+			// add the position name over this line
+			Text text = new Text(mid, 100, event.getName(), "middle", "xAxisLabels");
+			svgBuilder.addText(text);
 		}
 		
 		return svgBuilder.toString();
+	}
+	
+	private Path createStarPath(float x, float y) {
+		final float x1 = 2.938926261f;
+		final float x2 = 1.816517946f;
+		final float x3 = 4.755282581f;
+		final float x4 = 1.122669832f;
+		final float x5 = 0f;
+		
+		final float y1 = 2.135084972f;
+		final float y2 = -1.319777541f;
+		final float y3 = -3.455084972f;
+		final float y4 = -3.455222459f;
+		final float y5 = -6.91f;
+		
+		Path path = new Path();
+		
+		path.moveTo(x, y)
+		.lineTo(x + x1, y + y1)
+		.lineTo(x + x2, y + y2)
+		.lineTo(x + x3, y + y3)
+		.lineTo(x + x4, y + y4)
+		.lineTo(x + x5, y + y5)
+		.lineTo(x - x4, y + y4)
+		.lineTo(x - x3, y + y3)
+		.lineTo(x - x2, y + y2)
+		.lineTo(x - x1, y + y1)
+		.close();
+		
+		return path;
 	}
 	
 }

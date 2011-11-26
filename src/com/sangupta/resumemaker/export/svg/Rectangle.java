@@ -33,11 +33,18 @@ public class Rectangle {
 	
 	private Color color;
 	
+	private String styleClass;
+	
 	public Rectangle(float x, float y, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+	}
+	
+	public Rectangle(float x, float y, float width, float height, String styleClass) {
+		this(x, y, width, height);
+		this.styleClass = styleClass;
 	}
 	
 	public Rectangle(float x, float y, float width, float height, float radiusX, float radiusY) {
@@ -102,6 +109,14 @@ public class Rectangle {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public String getStyleClass() {
+		return styleClass;
+	}
+
+	public void setStyleClass(String styleClass) {
+		this.styleClass = styleClass;
 	}
 
 }
