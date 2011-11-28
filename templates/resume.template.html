@@ -163,9 +163,11 @@
 		#if($linkedin.interests && $linkedin.interests.size() > 0)
 		<section id="interests">
 			<h2>Interests</h2>
-			#foreach($name in $linkedin.interests)
-				<div class="interest">$name</div>
-			#end
+			<div class="interestWrapper">
+				#foreach($name in $linkedin.interests)
+					<div class="interest">$name</div>
+				#end
+			</div>
 		</section>
 		#end
 
@@ -207,15 +209,18 @@
 			</article>
 			<article>
 				#foreach($repo in $github.repositories)
-					<div class="row">
-						<h4>$repo.name&nbsp;
+					<div class="repository">
+						<div class="repositoryName">$repo.name&nbsp;
 							#if($repo.language)
 								<small>$repo.language</small>
 							#end
-						</h4>
-						<p>$repo.description</p>
-						<div>Watchers: $repo.watchers, Forks: $repo.forks</div>
-						<div>Last commit on $repo.lastPushed.toString()</div>
+						</div>
+						<div class="dates">Last commit: $repo.lastPushed.toString()</div>
+						<div class="details">
+							<p class="description">$repo.description</p>
+							<p class="repositoryStats">Watchers: $repo.watchers; Forks: $repo.forks
+						</div>
+						<div class="separator"></div>
 					</div>
 				#end
 			</article>

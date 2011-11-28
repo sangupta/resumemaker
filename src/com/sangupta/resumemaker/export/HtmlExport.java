@@ -342,7 +342,7 @@ public class HtmlExport implements Exporter {
 			svgBuilder.addPath(path);
 			
 			// compute the label path
-			Line line = new Line(mid, 112, mid, 160);
+			Line line = new Line(mid, 112, mid, 160, "graphGridLines");
 			svgBuilder.addLine(line);
 			
 			// add the star or circle around the end
@@ -394,3 +394,4 @@ public class HtmlExport implements Exporter {
 	}
 	
 }
+
