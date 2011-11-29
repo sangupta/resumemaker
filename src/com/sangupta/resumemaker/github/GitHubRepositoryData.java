@@ -37,6 +37,8 @@ public class GitHubRepositoryData implements Comparable<GitHubRepositoryData> {
 	
 	private Date lastPushed;
 	
+	private String githubCommitGraph = null;
+	
 	public GitHubRepositoryData(boolean collaborated) {
 		this.collaborated = collaborated;
 	}
@@ -51,7 +53,15 @@ public class GitHubRepositoryData implements Comparable<GitHubRepositoryData> {
 			return -1;
 		}
 		
-		return this.name.compareTo(other.name);
+		if(this.watchersForkers() != other.watchersForkers()) {
+			return 0 - (this.watchersForkers() - other.watchersForkers());
+		}
+		
+		return this.name.toLowerCase().compareTo(other.name.toLowerCase());
+	}
+	
+	public int watchersForkers() {
+		return this.watchers + this.forks;
 	}
 	
 	// Usual accessor's follow
@@ -110,6 +120,14 @@ public class GitHubRepositoryData implements Comparable<GitHubRepositoryData> {
 
 	public void setLastPushed(Date lastPushed) {
 		this.lastPushed = lastPushed;
+	}
+
+	public String getGithubCommitGraph() {
+		return githubCommitGraph;
+	}
+
+	public void setGithubCommitGraph(String githubCommitGraph) {
+		this.githubCommitGraph = githubCommitGraph;
 	}
 
 }

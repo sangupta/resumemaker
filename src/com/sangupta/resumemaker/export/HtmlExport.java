@@ -44,6 +44,7 @@ import com.sangupta.resumemaker.export.svg.Rectangle;
 import com.sangupta.resumemaker.export.svg.SVGBuilder;
 import com.sangupta.resumemaker.export.svg.Text;
 import com.sangupta.resumemaker.github.GitHubCommitData;
+import com.sangupta.resumemaker.github.GitHubRepositoryData;
 import com.sangupta.resumemaker.linkedin.LinkedInHelper;
 import com.sangupta.resumemaker.model.Event;
 import com.sangupta.resumemaker.model.UserData;
@@ -153,12 +154,109 @@ public class HtmlExport implements Exporter {
 		userData.gitHubData.sortRepositories();
 		context.put("github", userData.gitHubData);
 		context.put("githubGraph", createGithubGraph(userData.gitHubData.getCommitDatas()));
+		
+		// for each repository - prepare a separate SVG graph
+		// of 52 week commit history
+		final Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, cal.get(Calendar.YEAR) - 1);
+		final Date oneYearPrevious = cal.getTime();
+		
+		for(GitHubRepositoryData repo : userData.gitHubData.getRepositories()) {
+			final String repoName = repo.getName();
+			
+			List<GitHubCommitData> commits = new ArrayList<GitHubCommitData>();
+			// build a list of commits
+			for(GitHubCommitData commit : userData.gitHubData.getCommitDatas()) {
+				if(commit.repositoryID.equals(repoName) && commit.createdAt.after(oneYearPrevious)) {
+					commits.add(commit);
+				}
+			}
+			
+			// build the SVG graph
+			String graph = createGithubWeeklyGraph(commits);
+			repo.setGithubCommitGraph(graph);
+		}
 
 		// for alternating rows
 		context.put("alternator", new AlternatorTool());
 		
 		// return the final context back
 		return context;
+	}
+
+	private String createGithubWeeklyGraph(List<GitHubCommitData> commits) {
+		if(commits == null) {
+			return null;
+		}
+		
+		Collections.sort(commits);
+		
+		int[] weeklyValues = new int[52];
+		
+		final int GRAPH_WIDTH = 450;
+		final int GRAPH_HEIGHT = 150;
+		
+		final int BAR_WIDTH = 8;
+		
+		final int ORIGIN_X = GRAPH_WIDTH - (52 * BAR_WIDTH);
+		
+		// find max Y
+		for(GitHubCommitData commit : commits) {
+			int linesCommitted = commit.additions + commit.deletions;
+			int week = DateUtils.getWeekOfYear(commit.createdAt);
+			weeklyValues[week] = weeklyValues[week] + linesCommitted;
+		}
+		
+		int maxCommits = 0;
+		for(int i = 0; i < weeklyValues.length; i++) {
+			int linesCommitted = weeklyValues[i];
+			maxCommits += linesCommitted;
+		}
+		
+		if(maxCommits == 0) {
+			return null;
+		}
+		
+		final float yScalingFactor = (((float) GRAPH_HEIGHT) - 50f) / maxCommits;
+		
+		// start building the graph
+		SVGBuilder svgBuilder = new SVGBuilder(GRAPH_WIDTH, GRAPH_HEIGHT);
+		
+		// build the timeline
+		for(int i = 0; i < 52; i++) {
+			float startX = ORIGIN_X + i * 8;
+			float y = 101;
+			Line line = new Line(startX + 1, y, startX + 7, y);
+			svgBuilder.addLine(line);
+		}
+		
+		// the data bars
+		for(int i = 0; i < weeklyValues.length; i++) {
+			int week = i;
+			int sum = weeklyValues[i];
+			
+			if(sum > 0) {
+				float startX = ORIGIN_X + (week - 1) * 8;
+				float topY = 100f - (yScalingFactor * sum); 
+				
+				System.out.println("Top Y is " + topY + " for " + sum);
+				
+				Rectangle rectangle = new Rectangle(startX + 1, topY, 6, 100f - topY);
+				svgBuilder.addRectangle(rectangle);
+			}
+		}
+		
+		// create the legend
+		Rectangle rectangle = new Rectangle(10 + ORIGIN_X, 115, 10, 10);
+		svgBuilder.addRectangle(rectangle);
+		
+		Text text = new Text(25 + ORIGIN_X, 125, "commits by user");
+		svgBuilder.addText(text);
+		
+		text = new Text(GRAPH_WIDTH - 150, 125, "52 week participation");
+		svgBuilder.addText(text);
+		
+		return svgBuilder.toString();
 	}
 
 	/**

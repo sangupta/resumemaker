@@ -210,19 +210,21 @@
 			<article>
 				#foreach($repo in $github.repositories)
 					<div class="repository">
-						<div class="repositoryName">$repo.name&nbsp;
-							#if($repo.language)
-								<small>$repo.language</small>
-							#end
+						<div class="repositoryDetails">
+							<h3>$repo.name</h3>
+							<span class="comment">forked from square/luhnybin</span>
+							<p>$repo.description</p>
+							<span class="lastCommit">Last commit: $repo.lastPushed.toString()<br/></span>
+							<span class="detail">#if($repo.language)Language: $repo.language<br/> #end</span>
+							<span>Watchers: $repo.watchers<br/></span>
+							<span>Forks: $repo.forks<br/></span>
 						</div>
-						<div class="dates">Last commit: $repo.lastPushed.toString()</div>
-						<div class="details">
-							<p class="description">$repo.description</p>
-							<p class="repositoryStats">Watchers: $repo.watchers; Forks: $repo.forks
+						<div class="repositoryGraph">
+							$repo.githubCommitGraph
 						</div>
-						<div class="separator"></div>
 					</div>
 				#end
+				<div class="clear"></div>
 			</article>
 		</section>
 		#end
