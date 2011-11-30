@@ -17,5 +17,14 @@
 	<classpathentry kind="lib" path="libs/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="libs/xstream-1.4.2.jar"/>
 	<classpathentry kind="lib" path="libs/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="libs/sqlitejdbc-v056.jar"/>
+	<classpathentry kind="lib" path="libs/pegdown-1.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/parboiled-core-1.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/parboiled-java-1.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/asm-3.3.1.jar"/>
+	<classpathentry kind="lib" path="libs/asm-tree-3.3.1.jar"/>
+	<classpathentry kind="lib" path="libs/asm-analysis-3.3.1.jar"/>
+	<classpathentry kind="lib" path="libs/jericho-html-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/velocity-tools-generic-2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

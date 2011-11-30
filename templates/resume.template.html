@@ -211,16 +211,22 @@
 				#foreach($repo in $github.repositories)
 					<div class="repository">
 						<div class="repositoryDetails">
-							<h3>$repo.name</h3>
-							<span class="comment">forked from square/luhnybin</span>
+							<h3><a href="$repo.url">$repo.name</a></h3>
+							#if($repo.forkName)
+								<span class="comment">forked from <a href="$repo.forkUrl">$repo.forkName</a></span>
+							#end
 							<p>$repo.description</p>
 							<span class="lastCommit">Last commit: $repo.lastPushed.toString()<br/></span>
-							<span class="detail">#if($repo.language)Language: $repo.language<br/> #end</span>
-							<span>Watchers: $repo.watchers<br/></span>
-							<span>Forks: $repo.forks<br/></span>
 						</div>
-						<div class="repositoryGraph">
-							$repo.githubCommitGraph
+						<div class="repositoryInfo">
+							<div class="repositoryStats">
+								<span class="detail">#if($repo.language)Language: $repo.language;&nbsp; #end</span>
+								<span>Watchers: $repo.watchers</span>
+								<span>; Forks: $repo.forks</span>
+							</div>
+							<div class="repositoryGraph">
+								$repo.githubCommitGraph
+							</div>
 						</div>
 					</div>
 				#end

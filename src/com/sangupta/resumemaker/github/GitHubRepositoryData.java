@@ -39,6 +39,12 @@ public class GitHubRepositoryData implements Comparable<GitHubRepositoryData> {
 	
 	private String githubCommitGraph = null;
 	
+	private String url = null;
+	
+	private String forkName = null;
+	
+	private String forkUrl = null;
+	
 	public GitHubRepositoryData(boolean collaborated) {
 		this.collaborated = collaborated;
 	}
@@ -128,6 +134,30 @@ public class GitHubRepositoryData implements Comparable<GitHubRepositoryData> {
 
 	public void setGithubCommitGraph(String githubCommitGraph) {
 		this.githubCommitGraph = githubCommitGraph;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getForkName() {
+		return forkName;
+	}
+
+	public void setForkName(String forkName) {
+		this.forkName = forkName;
+	}
+
+	public String getForkUrl() {
+		return forkUrl;
+	}
+
+	public void setForkUrl(String forkUrl) {
+		this.forkUrl = forkUrl;
 	}
 
 }

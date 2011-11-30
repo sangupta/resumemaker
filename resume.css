@@ -315,13 +315,15 @@ repository styling
 	width: 400px;
 	float: left;
 }
-.repositoryGraph {
-	min-height: 50px;
+.repositoryInfo {
 	width: 450px;
 	float: left;
 	margin-left: 40px;
-	border: 1px solid;
 	margin-top: 1em;
+}
+.repositoryGraph {
+	padding-top: 30px;
+	min-height: 50px;
 }
 .repositoryDetails p {
 	word-wrap: break-word;
@@ -329,15 +331,18 @@ repository styling
 .lastCommit {
 	font-style: italic;
 }
-/**
-.repositoryStats {
+.repositoryStats, .repositoryStats span {
 	font-size: 12px;
-	line-height: 16px;
-	float: left;
-	width: 150px;
-	padding-right: 40px;
-	margin-top: 1.2em;
-	border-left: 1px solid;
-	padding-left: 20px;
 }
-*/
+.weeklyGraphBar {
+	stroke: #000000;
+	fill: #000000;
+}
+.graphLegendText {
+	font-size: 10px;
+}
+
+.graphWeekMark {
+	stroke: #aaaaaa;
+	stroke-width: 1;	
+}

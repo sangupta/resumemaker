@@ -193,12 +193,13 @@ public class HtmlExport implements Exporter {
 		
 		int[] weeklyValues = new int[52];
 		
-		final int GRAPH_WIDTH = 450;
-		final int GRAPH_HEIGHT = 150;
+		final int GRAPH_WIDTH = 412;
+		final int GRAPH_HEIGHT = 70;
 		
 		final int BAR_WIDTH = 8;
 		
 		final int ORIGIN_X = GRAPH_WIDTH - (52 * BAR_WIDTH);
+		final int ORIGIN_Y = GRAPH_HEIGHT - 50;
 		
 		// find max Y
 		for(GitHubCommitData commit : commits) {
@@ -213,11 +214,10 @@ public class HtmlExport implements Exporter {
 			maxCommits += linesCommitted;
 		}
 		
-		if(maxCommits == 0) {
-			return null;
+		float yScalingFactor = 0f;
+		if(maxCommits > 0) {
+			yScalingFactor = ((float) ORIGIN_Y) / maxCommits;
 		}
-		
-		final float yScalingFactor = (((float) GRAPH_HEIGHT) - 50f) / maxCommits;
 		
 		// start building the graph
 		SVGBuilder svgBuilder = new SVGBuilder(GRAPH_WIDTH, GRAPH_HEIGHT);
@@ -225,8 +225,8 @@ public class HtmlExport implements Exporter {
 		// build the timeline
 		for(int i = 0; i < 52; i++) {
 			float startX = ORIGIN_X + i * 8;
-			float y = 101;
-			Line line = new Line(startX + 1, y, startX + 7, y);
+			float y = ORIGIN_Y + 1;
+			Line line = new Line(startX, y, startX + 7, y, "graphWeekMark");
 			svgBuilder.addLine(line);
 		}
 		
@@ -237,23 +237,21 @@ public class HtmlExport implements Exporter {
 			
 			if(sum > 0) {
 				float startX = ORIGIN_X + (week - 1) * 8;
-				float topY = 100f - (yScalingFactor * sum); 
+				float topY = ORIGIN_Y - (yScalingFactor * sum); 
 				
-				System.out.println("Top Y is " + topY + " for " + sum);
-				
-				Rectangle rectangle = new Rectangle(startX + 1, topY, 6, 100f - topY);
+				Rectangle rectangle = new Rectangle(startX + 1, topY, 6, ORIGIN_Y - topY, "weeklyGraphBar");
 				svgBuilder.addRectangle(rectangle);
 			}
 		}
 		
 		// create the legend
-		Rectangle rectangle = new Rectangle(10 + ORIGIN_X, 115, 10, 10);
+		Rectangle rectangle = new Rectangle(10 + ORIGIN_X, ORIGIN_Y + 15, 10, 10);
 		svgBuilder.addRectangle(rectangle);
 		
-		Text text = new Text(25 + ORIGIN_X, 125, "commits by user");
+		Text text = new Text(25 + ORIGIN_X, ORIGIN_Y + 25, "commits by user", "start", "graphLegendText");
 		svgBuilder.addText(text);
 		
-		text = new Text(GRAPH_WIDTH - 150, 125, "52 week participation");
+		text = new Text(GRAPH_WIDTH - 150, ORIGIN_Y + 25, "52 week participation", "start", "graphLegendText");
 		svgBuilder.addText(text);
 		
 		return svgBuilder.toString();

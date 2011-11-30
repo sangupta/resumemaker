@@ -17,6 +17,7 @@
  */
 package com.sangupta.resumemaker.github;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -136,13 +137,12 @@ public class GitHubAnalyzer implements Analyzer {
 			try {
 				conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	private GitHubRepositoryData getGitHubRepositoryData(Repository repository, boolean collaborated) {
+	private GitHubRepositoryData getGitHubRepositoryData(Repository repository, boolean collaborated) throws IOException {
 		GitHubRepositoryData git = new GitHubRepositoryData(false);
 		
 		git.setName(repository.getName());
@@ -152,6 +152,21 @@ public class GitHubAnalyzer implements Analyzer {
 		git.setForks(repository.getForks());
 		git.setCreated(repository.getCreatedAt());
 		git.setLastPushed(repository.getPushedAt());
+		git.setUrl(repository.getHtmlUrl());
+		
+		// get details on the original fork name
+		RepositoryService repositoryService = new RepositoryService();
+		Repository repDetails = repositoryService.getRepository(repository.getOwner().getLogin(), repository.getName());
+		if(repDetails != null && repDetails.getSource() != null) {
+			String url = repDetails.getSource().getHtmlUrl();
+			String forkName = url;
+			if(url.startsWith("https://github.com/")) {
+				forkName = url.substring("https://github.com/".length());
+			}
+			
+			git.setForkName(forkName);
+			git.setForkUrl(url);
+		}
 		
 		return git;
 	}

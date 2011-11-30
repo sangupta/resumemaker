@@ -42,6 +42,8 @@ public class ResumeMaker {
 	public static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 	
 	private static final String USER_DATA_BUFFER = "user.data";
+	
+	private static final boolean useCachedData = false; 
 
 	/**
 	 * @param args
@@ -50,8 +52,8 @@ public class ResumeMaker {
 		Config config = new Config();
 		
 		// linkedin
-		config.linkedInConfig.consumerKey = "";
-		config.linkedInConfig.consumerSecret = "";
+		config.linkedInConfig.consumerKey = "3nzfrdq9qj8n";
+		config.linkedInConfig.consumerSecret = "sees0f8pPyU2GW1E";
 		config.linkedInConfig.userName = "sangupta";
 		
 		// github
@@ -61,14 +63,16 @@ public class ResumeMaker {
 		config.gravatarID = "sandy.pec@gmail.com";
 		
 		UserData userData = null;
-		
-		final long startTime = System.currentTimeMillis();
-		System.out.println("Start fetching user data at " + startTime);
-		userData = gatherUserData(config);
-		final long endTime = System.currentTimeMillis();
-		System.out.println("Start fetching user data at " + endTime + ", time taken " + (endTime - startTime) + " ms.");
-		
-		writeUserData(userData);
+
+		if(!useCachedData) {
+			final long startTime = System.currentTimeMillis();
+			System.out.println("Start fetching user data at " + startTime);
+			userData = gatherUserData(config);
+			final long endTime = System.currentTimeMillis();
+			System.out.println("Start fetching user data at " + endTime + ", time taken " + (endTime - startTime) + " ms.");
+			
+			writeUserData(userData);
+		}
 		
 		userData = readUserData();
 		
@@ -79,7 +83,7 @@ public class ResumeMaker {
 		exporter.export(userData, exportFile);
 		System.out.println("done!");
 		
-		BrowserUtil.openUrlInBrowser("file:///" + exportFile.getAbsolutePath());
+//		BrowserUtil.openUrlInBrowser("file:///" + exportFile.getAbsolutePath());
 	}
 
 	private static UserData readUserData() throws FileNotFoundException, IOException, ClassNotFoundException {
