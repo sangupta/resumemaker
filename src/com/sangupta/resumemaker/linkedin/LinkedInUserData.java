@@ -22,11 +22,13 @@ import java.util.List;
 
 import com.google.code.linkedinapi.schema.Certification;
 import com.google.code.linkedinapi.schema.Education;
+import com.google.code.linkedinapi.schema.MemberUrl;
 import com.google.code.linkedinapi.schema.Patent;
 import com.google.code.linkedinapi.schema.Position;
 import com.google.code.linkedinapi.schema.Publication;
 import com.google.code.linkedinapi.schema.Recommendation;
 import com.google.code.linkedinapi.schema.Skill;
+import com.google.code.linkedinapi.schema.TwitterAccount;
 
 public class LinkedInUserData {
 	
@@ -41,6 +43,10 @@ public class LinkedInUserData {
 	private String summary;
 	
 	private String specialities;
+	
+	private String pictureUrl;
+	
+	private String publicProfileUrl;
 	
 	private final List<String> honors = new ArrayList<String>();
 	
@@ -59,6 +65,10 @@ public class LinkedInUserData {
 	private final List<Publication> publications = new ArrayList<Publication>();
 	
 	private final List<Skill> skills = new ArrayList<Skill>();
+	
+	private final List<MemberUrl> memberUrlList = new ArrayList<MemberUrl>();
+	
+	private final List<TwitterAccount> twitterAccountList = new ArrayList<TwitterAccount>();
 
 	public void addRecommendations(List<Recommendation> recommendations) {
 		this.recommendations.addAll(recommendations);
@@ -182,5 +192,37 @@ public class LinkedInUserData {
 
 	public List<String> getHonors() {
 		return honors;
+	}
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
+
+	public String getPublicProfileUrl() {
+		return publicProfileUrl;
+	}
+
+	public void setPublicProfileUrl(String publicProfileUrl) {
+		this.publicProfileUrl = publicProfileUrl;
+	}
+
+	public void addUrlResources(List<MemberUrl> memberUrlList) {
+		this.memberUrlList.addAll(memberUrlList);
+	}
+
+	public void addTwitterAccounts(List<TwitterAccount> twitterAccountList) {
+		this.twitterAccountList.addAll(twitterAccountList);
+	}
+
+	public List<MemberUrl> getMemberUrlList() {
+		return memberUrlList;
+	}
+
+	public List<TwitterAccount> getTwitterAccountList() {
+		return twitterAccountList;
 	}
 }

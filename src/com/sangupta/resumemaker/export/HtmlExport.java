@@ -248,7 +248,7 @@ public class HtmlExport implements Exporter {
 		Rectangle rectangle = new Rectangle(10 + ORIGIN_X, ORIGIN_Y + 15, 10, 10);
 		svgBuilder.addRectangle(rectangle);
 		
-		Text text = new Text(25 + ORIGIN_X, ORIGIN_Y + 25, "commits by user", "start", "graphLegendText");
+		Text text = new Text(25 + ORIGIN_X, ORIGIN_Y + 25, "commits by this user", "start", "graphLegendText");
 		svgBuilder.addText(text);
 		
 		text = new Text(GRAPH_WIDTH - 150, ORIGIN_Y + 25, "52 week participation", "start", "graphLegendText");

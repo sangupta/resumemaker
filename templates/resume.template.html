@@ -9,7 +9,13 @@
 			<h1>$name</h1>
 			<h3>$linkedin.headline</h3>
 			<p>$linkedin.summary</p>
-			<div class="image"><img src="$gravatarURL" /></div>
+			<div class="image">
+				#if($linkedin.pictureUrl)
+					<img src="$linkedin.pictureUrl" ></img>
+				#else
+					<img src="$gravatarURL" ></img>
+				#end
+			</div>
 		</header>
 
 
@@ -234,6 +240,30 @@
 			</article>
 		</section>
 		#end
+		<section id="myLinks">
+			<h2>My Links</h2>
+			<article>
+				#if($linkedin.publicProfileUrl)
+					<div class="myLink">
+						<a href="$linkedin.publicProfileUrl">LinkedIn Profile</a>
+					</div>
+				#end
+				#if($linkedin.twitterAccountList && $linkedin.twitterAccountList.size() > 0)
+					#foreach($twitter in $linkedin.twitterAccountList)
+						<div class="myLink">
+							Follow&nbsp;<a href="http://twitter.com/$twitter.providerAccountName">@$twitter.providerAccountName</a>
+						</div>
+					#end
+				#end
+				#if($linkedin.memberUrlList && $linkedin.memberUrlList.size() > 0)
+					#foreach($link in $linkedin.memberUrlList)
+						<div class="myLink">
+							<a href="$link.url">$link.name</a>
+						</div>
+					#end
+				#end
+			</article>
+		</section>
 		<footer>
 			Generated using <a href="#">ResumeMaker</a> on $createdOn.toString()
 		</footer>

@@ -43,7 +43,7 @@ public class ResumeMaker {
 	
 	private static final String USER_DATA_BUFFER = "user.data";
 	
-	private static final boolean useCachedData = false; 
+	private static final boolean useCachedData = true; 
 
 	/**
 	 * @param args
