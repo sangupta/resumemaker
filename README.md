@@ -1,7 +1,10 @@
+ResumeMaker is a java command line application to create a resume out of public sites such as LinkedIn, GitHub etc. 
 
-	ResumeMaker is a java command line application to create a resume 
-	out of public sites such as LinkedIn, GitHub etc. It currently 
-	exports the resume as an HTML file.
+It currently exports the resume as an HTML file and uses SVG graphics for displaying the various graphs. Use of an
+HTML5 browser is a MUST :)
+
+License
+-------
 	
 	Copyright (c) 2011, Sandeep Gupta
 	
@@ -12,10 +15,10 @@
 	own license terms. See the distribution libraries or the project
 	documentation for more details.
 
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the LICENSE
-	as included in the distribution. You may obtain a copy of the 
-	License at
+	The entire source is licensed under the Apache License, Version 2.0 
+	(the "License"); you may not use this file except in compliance with
+	the LICENSE as included in the distribution. You may obtain a copy of
+	the License at
 
 		http://www.apache.org/licenses/LICENSE-2.0
 
