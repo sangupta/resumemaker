@@ -3,8 +3,11 @@
 	<head>
 		<title>$name</title>
 		<link rel="stylesheet" type="text/css" href="resume.css" />
+		<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
+		#set($fillColorStyleClass = $alternator.auto('fillColor1', 'fillColor2', 'fillColor3', 'fillColor4', 'fillColor5', 'fillColor6', 'fillColor7', 'fillColor8'))
+		#set($textColorStyleClass = $alternator.auto('color1', 'color2', 'color3', 'color4', 'color5', 'color6', 'color7', 'color8'))
 		<header>
 			<h1>$name</h1>
 			<h3>$linkedin.headline</h3>
@@ -171,7 +174,7 @@
 			<h2>Interests</h2>
 			<div class="interestWrapper">
 				#foreach($name in $linkedin.interests)
-					<div class="interest">$name</div>
+					<div class="interest $fillColorStyleClass">$name</div>
 				#end
 			</div>
 		</section>

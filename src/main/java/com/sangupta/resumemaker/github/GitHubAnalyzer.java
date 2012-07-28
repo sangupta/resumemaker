@@ -15,6 +15,7 @@
  * limitations under the License.
  * 
  */
+
 package com.sangupta.resumemaker.github;
 
 import java.io.IOException;
@@ -27,13 +28,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.egit.github.core.ExtendedRepositoryCommit;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.service.CollaboratorService;
 import org.eclipse.egit.github.core.service.CommitService;
-import org.eclipse.egit.github.core.service.ExtendedCommitService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import org.eclipse.egit.github.core.service.UserService;
@@ -192,8 +191,8 @@ public class GitHubAnalyzer implements Analyzer {
 				// if yes, use it - else fetch fresh from server
 				commitData = getFromDatabase(name, sha);
 				if(commitData == null) {
-					ExtendedCommitService ecs = new ExtendedCommitService();
-					ExtendedRepositoryCommit commit = ecs.getCommit(repository, sha);
+					CommitService ecs = new CommitService();
+					RepositoryCommit commit = ecs.getCommit(repository, sha);
 		
 					commitData = getCommitData(name, sha, commit);
 					
@@ -273,7 +272,7 @@ public class GitHubAnalyzer implements Analyzer {
 	 * @param commit
 	 * @return
 	 */
-	private GitHubCommitData getCommitData(String repositoryName, String sha, ExtendedRepositoryCommit commit) {
+	private GitHubCommitData getCommitData(String repositoryName, String sha, RepositoryCommit commit) {
 		GitHubCommitData commitData = new GitHubCommitData();
 
 		commitData.repositoryID = repositoryName;

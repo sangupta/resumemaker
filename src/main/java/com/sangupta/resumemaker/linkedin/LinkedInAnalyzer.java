@@ -36,9 +36,9 @@ import com.google.code.linkedinapi.schema.Publications;
 import com.google.code.linkedinapi.schema.RecommendationsReceived;
 import com.google.code.linkedinapi.schema.Skills;
 import com.google.code.linkedinapi.schema.TwitterAccounts;
+import com.sangupta.jerry.util.ConsoleUtils;
 import com.sangupta.resumemaker.Analyzer;
 import com.sangupta.resumemaker.BrowserUtil;
-import com.sangupta.resumemaker.ResumeMaker;
 import com.sangupta.resumemaker.model.Config;
 import com.sangupta.resumemaker.model.UserData;
 
@@ -56,8 +56,7 @@ public class LinkedInAnalyzer implements Analyzer {
 		BrowserUtil.openUrlInBrowser(authUrl);
 		
 		// get the browser code
-		System.out.print("Enter the authorization code as provided by LinkedIn: ");
-		String code = ResumeMaker.bufferedReader.readLine();
+		String code = ConsoleUtils.readPassword("Enter the authorization code as provided by LinkedIn: ", false);
 		
 		// try and get the access token
 		LinkedInAccessToken accessToken = oauthService.getOAuthAccessToken(requestToken, code);

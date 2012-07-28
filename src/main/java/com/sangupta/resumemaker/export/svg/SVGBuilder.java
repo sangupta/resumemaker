@@ -82,6 +82,7 @@ public class SVGBuilder {
 	
 	public void addPath(Path path) {
 		builder.append("<path ");
+		addParam(builder, "class", path.getStyleClassName());
 		addParam(builder, "d", path.getCommands());
 		builder.append(" ></path>");
 		builder.append(NEW_LINE);
@@ -119,10 +120,12 @@ public class SVGBuilder {
 	}
 
 	private void addParam(StringBuilder builder, String param, String value) {
-		builder.append(param);
-		builder.append("=\"");
-		builder.append(value);
-		builder.append("\" ");
+		if(value != null) {
+			builder.append(param);
+			builder.append("=\"");
+			builder.append(value);
+			builder.append("\" ");
+		}
 	}
 
 	public void close() {

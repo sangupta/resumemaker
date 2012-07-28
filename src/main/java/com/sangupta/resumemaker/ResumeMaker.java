@@ -15,13 +15,12 @@
  * limitations under the License.
  * 
  */
+
 package com.sangupta.resumemaker;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import org.apache.commons.io.FileUtils;
 
@@ -34,16 +33,16 @@ import com.sangupta.resumemaker.model.UserData;
 import com.thoughtworks.xstream.XStream;
 
 /**
+ * Utility to generate an HTML5 resume from a user's online presence.
+ * 
  * @author sangupta
  *
  */
 public class ResumeMaker {
 	
-	public static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-	
 	private static final String USER_DATA_BUFFER = "user.data";
 	
-	private static final boolean useCachedData = true; 
+	private static final boolean useCachedData = false; 
 
 	/**
 	 * @param args

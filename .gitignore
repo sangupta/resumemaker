@@ -1,4 +1,5 @@
-#### `.gitignore`
+# Java noise
+*.class
 
 # SVN directories
 .svn
@@ -8,11 +9,19 @@
 *.pbxuser
 profile
 
-# Flash Builder noise
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Windows noise
+desktop.ini
+
+# Eclipse/Flash Builder noise
 .actionScriptProperties
 .flexProperties
 .project
-.settings
+.classpath
 bin/*
 bin-debug/*
 report/*
@@ -20,13 +29,12 @@ bin-test/*
 docs/*
 .flexLibProperties
 
-# Java noise
-*.class
-
-# Windows noise
-desktop.ini
+# Maven noise
+target/*
 
 # Project specific
+.settings/*
+.classpath
+github.db
 user.data
 resume.html
-libs/*.jar

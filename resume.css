@@ -2,8 +2,6 @@
 Generics definitions
 */
 html {
-	font-family: Georgia, "Times New Roman", Times, serif;
-	font-family: arial, sans-serif;
 }
 
 body {
@@ -13,7 +11,27 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 0px;
+	font: 13px Arial;
 }
+/**
+Set the fill colors */
+.fillColor1 { fill: #2f69bf; background-color: #2f69bf; }
+.fillColor2 { fill: #a2bf2f; background-color: #a2bf2f; }
+.fillColor3 { fill: #bf5a2f; background-color: #bf5a2f; }
+.fillColor4 { fill: #bfa22f; background-color: #bfa22f; }
+.fillColor5 { fill: #772fbf; background-color: #772fbf; }
+.fillColor6 { fill: #bf2f2f; background-color: #bf2f2f; }
+.fillColor7 { fill: #00327f; background-color: #00327f; }
+.fillColor8 { fill: #667f00; background-color: #667f00; }
+
+.color1 { color: #2f69bf; }
+.color2 { color: #a2bf2f; }
+.color3 { color: #bf5a2f; }
+.color4 { color: #bfa22f; }
+.color5 { color: #772fbf; }
+.color6 { color: #bf2f2f; }
+.color7 { color: #00327f; }
+.color8 { color: #667f00; }
 /**
 In case we want to display the box shadow around
 body {
@@ -69,6 +87,7 @@ header h3 {
 header p {
 	font-size: 16px;
 	vertical-align: baseline;
+	text-align: center;
 }
 
 header .image {
@@ -139,18 +158,21 @@ recommendation bullets
 	text-transform: lowercase;
 	font-size: 14px;
 	font-style: italic;
+	line-height: 20px;
 }
 
 .recommendedBy {
 	font-size: 14px;
 	float: left;
+	line-height: 20px;
 }
 
 .recommendationText {
-	font-size: 14px;
+	font-size: 13px;
 	text-align: justify;
 	width: 750px;
 	float: left;
+	line-height: 20px;
 }
 
 .openQuote {
@@ -198,7 +220,7 @@ recommendation bullets
 
 .dates {
 	float: right;
-	font-size: 14px;
+	font-size: 13px;
 }
 
 .authority {
@@ -280,6 +302,7 @@ skills
 	float: left;
 	padding-top: 10px;
 	padding-bottom: 10px;
+	font-size: 14px;
 }
 
 /**
@@ -299,7 +322,6 @@ interests
 	padding-bottom: 10px;
 	margin-right: 20px;
 	margin-left: 20px;
-	background: #FAAF40;
 }
 /**
 repository styling
@@ -315,6 +337,9 @@ repository styling
 	width: 400px;
 	float: left;
 }
+.repositoryDetails h3 a {
+	font-size: 16px;
+}
 .repositoryInfo {
 	width: 450px;
 	float: left;
@@ -327,6 +352,7 @@ repository styling
 }
 .repositoryDetails p {
 	word-wrap: break-word;
+	line-height: 20px;
 }
 .lastCommit {
 	font-style: italic;
@@ -345,4 +371,10 @@ repository styling
 .graphWeekMark {
 	stroke: #aaaaaa;
 	stroke-width: 1;	
+}
+/**
+awards
+*/
+.award {
+	font-size: 14px;
 }

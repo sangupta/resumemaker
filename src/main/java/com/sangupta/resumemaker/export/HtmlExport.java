@@ -36,6 +36,7 @@ import org.apache.velocity.tools.generic.AlternatorTool;
 
 import com.google.code.linkedinapi.schema.Education;
 import com.google.code.linkedinapi.schema.Position;
+import com.sangupta.jerry.util.AssertUtils;
 import com.sangupta.resumemaker.Exporter;
 import com.sangupta.resumemaker.export.svg.Circle;
 import com.sangupta.resumemaker.export.svg.Line;
@@ -264,7 +265,7 @@ public class HtmlExport implements Exporter {
 	 * @return
 	 */
 	private String createGithubGraph(List<GitHubCommitData> commits) {
-		if(commits == null) {
+		if(AssertUtils.isEmpty(commits)) {
 			return null;
 		}
 		
@@ -411,7 +412,9 @@ public class HtmlExport implements Exporter {
 		}
 		
 		// start building the shape for each year
-		for(Event event : events) {
+		for(int index = 0; index < events.size(); index++) {
+			Event event = events.get(index);
+			
 			int myStartYear = DateUtils.getYear(event.getStartDate());
 			int myStartMonth = DateUtils.getMonth(event.getStartDate());
 			
@@ -433,7 +436,10 @@ public class HtmlExport implements Exporter {
 			
 			final float mid = (endX + startX) / 2;
 			
+			String styleClassName = "fillColor" + String.valueOf((index % 8) + 1);
+			
 			Path path = new Path();
+			path.setStyleClassName(styleClassName);
 			path.moveTo(startX, 199).arc(endX, 199, ((endX - startX) / 2), RADIUS_Y, 0, false, true).close();
 			svgBuilder.addPath(path);
 			

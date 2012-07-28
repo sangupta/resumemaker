@@ -21,6 +21,8 @@ public class Path {
 	
 	private StringBuilder builder;
 	
+	private String styleClassName;
+	
 	public Path() {
 		builder = new StringBuilder();
 	}
@@ -108,6 +110,14 @@ public class Path {
 
 	public String getCommands() {
 		return builder.toString();
+	}
+
+	public String getStyleClassName() {
+		return styleClassName;
+	}
+
+	public void setStyleClassName(String styleClassName) {
+		this.styleClassName = styleClassName;
 	}
 
 }
